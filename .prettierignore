@@ -1,0 +1,5 @@
+build/
+
+# Extension-specific compiiled files
+/extension/dev
+/extension/extension
