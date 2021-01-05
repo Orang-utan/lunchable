@@ -25,7 +25,7 @@ switch (process.env.NODE_ENV) {
 const { NODE_ENV } = process.env;
 const ATLAS_URI =
   process.env.ATLAS_URI || 'mongodb://localhost:27017/myproject';
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:30000';
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
 
 // auth config
 const JWT_SECRET = process.env.JWT_SECRET || 'my-placeholder-string';

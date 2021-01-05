@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
@@ -43,14 +43,14 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Yarn install
-        working-directory: ./src/client
+        working-directory: ./web
         run: yarn install --frozen-lockfile
 
       - name: Run tests
-        working-directory: ./src/client
+        working-directory: ./web
         run: yarn test
 
   server:
@@ -64,10 +64,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Yarn install
-        working-directory: ./src
+        working-directory: ./server
         run: yarn install --frozen-lockfile
 
       - name: Run ESLint
@@ -75,9 +75,9 @@ jobs:
         run: yarn lint
 
       - name: Run tests
-        working-directory: ./src
+        working-directory: ./server
         run: yarn test
 
       - name: Compile TypeScript
-        working-directory: ./src
+        working-directory: ./server
         run: yarn build
