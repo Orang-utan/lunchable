@@ -2,7 +2,6 @@
   "name": "pigeon",
   "version": "0.0.1",
   "description": "Lunchable monorepository",
-  "repository": "https://github.com/pigeon-crew/pigeon",
   "author": "Orang-utan",
   "private": true,
   "scripts": {
