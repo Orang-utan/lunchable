@@ -72,6 +72,7 @@ jobs:
 
       - name: Run ESLint
         # Get all changed files, filter to only .js, .ts, .tsx, and lint them
+        working-directory: ./server
         run: yarn lint
 
       - name: Run tests
