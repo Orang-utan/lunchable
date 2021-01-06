@@ -13,7 +13,7 @@ const createServer = (): express.Express => {
 
   // API Routes
   app.use('/api/users', userRouter);
-  app.use('/api/lunch', lunchRouter);
+  app.use('/api/lunches', lunchRouter);
 
   return app;
 };

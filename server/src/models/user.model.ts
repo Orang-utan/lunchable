@@ -10,6 +10,7 @@ interface IUser extends mongoose.Document {
   password: string;
   refreshToken: string;
   groupBelongedTo: string[];
+  pastLunches: string[];
 }
 
 const UserSchema = new Schema({
@@ -19,6 +20,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   refreshToken: { type: String, required: false },
   groupBelongedTo: { type: [String], required: true, default: [] },
+  pastLunches: { type: [String], required: true, default: [] },
 });
 
 const User = mongoose.model<IUser>('User', UserSchema);
