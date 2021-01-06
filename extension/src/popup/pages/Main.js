@@ -14,8 +14,8 @@ const randNum = (a, b) => {
   return Math.floor(Math.random() * (b - a) + a);
 };
 
-// Component
-const Main = ({ setLoggedIn }) => {
+const Main = ({ setLoggedIn, searching }) => {
+  console.log(searching);
   const [searchState, setSearchState] = useState("rest");
 
   const [recipient, setRecipient] = useState("");

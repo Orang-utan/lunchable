@@ -1,35 +1,18 @@
-import {
-  fetchCurrentFriend,
-  fetchMyFeed,
-  sendLink,
-  fetchPendingFriend,
-  acceptRequest,
-  rejectRequest,
-  fetchMe,
-  sendFriendRequest,
-  fetchLinkPreview,
-  archiveLink,
-  likeLink,
-  fetchLikeStatus,
-} from "../services/apiRequests";
-import {
-  setTokens,
-  getRefreshToken,
-  getAccessToken,
-  setNotifyCount,
-  getNotifyCount,
-} from "../services/storageClient";
-import { API_ENDPOINT } from "../services/config";
 import axios from "axios";
 import io from "socket.io-client";
-import { isAfter } from "date-fns";
+import { fetchMe } from "../services/apiRequests";
+import { API_ENDPOINT } from "../services/config";
+import {
+  getAccessToken,
+  getNotifyCount,
+  getRefreshToken,
+  setNotifyCount,
+  setTokens,
+} from "../services/storageClient";
 
+/** socket stuff below  */
 let socket = io.connect(API_ENDPOINT);
 let uid = null;
-
-getRefreshToken().then((token) => {
-  console.log(token);
-});
 
 socket.on("notifyNewLink", (payload) => {
   getNotifyCount((count) => {
@@ -82,75 +65,33 @@ function unbindSocketToUID() {
   }
 }
 
-function emitLinkSent(recipientEmail) {
-  if (uid) {
-    const payload = { senderId: uid, recipientEmail };
-    socket.emit("linkSent", payload);
-  }
+/** interval fetching logic */
+function setIntervalAndExecute(fn, t) {
+  fn();
+  return setInterval(fn, t);
 }
 
-function emitLinkLiked(linkId, currentLikeStatus) {
-  // user id exists and post is currently not liked
-  if (uid && !currentLikeStatus) {
-    const payload = { senderId: uid, linkId };
-    socket.emit("linkLiked", payload);
-  }
-}
+let statusInterval = null;
 
-// function getRefreshToken() {
-//   return new Promise((resolve, reject) => {
-//     chrome.storage.local.get("refreshToken", (tokenPair) => {
-//       const refreshToken = tokenPair["refreshToken"];
-
-//       if (refreshToken) {
-//         resolve(refreshToken);
-//       } else {
-//         reject(new Error("refreshToken not found"));
-//       }
-//     });
-//   });
-// }
-
+/** background script message passing core logic */
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   switch (msg.type) {
     case "findmatch":
-      let counter = 0;
-      console.log("Finding match");
-
-      function fetchStatus() {
-        return new Promise((resolveMain, reject) => {
-          function fetchHelper() {
-            var networkPromise = fetch(
-              "https://jsonplaceholder.typicode.com/todos/1"
-            );
-
-            var timeOutPromise = new Promise(function (resolve, reject) {
-              setTimeout(resolve, 2000, "Timeout Done");
-            });
-
-            Promise.all([networkPromise, timeOutPromise]).then(function (
-              values
-            ) {
-              counter += 1;
-              console.log("At least 2 sec", counter);
-              if (counter !== 3) {
-                fetchStatus();
-              }
-            });
-          }
-
-          fetchHelper().then(() => resolveMain());
-        });
+      if (!statusInterval) {
+        statusInterval = setIntervalAndExecute(
+          () => console.log("hello"),
+          1000
+        );
       }
-
-      fetchStatus()
-        .then(() => {
-          console.log("bruh");
-          response({ success: true });
-        })
-        .catch((err) => response({ success: false, error: err }));
       break;
-
+    case "cancelMatch":
+      if (!statusInterval) {
+        statusInterval = setIntervalAndExecute(
+          () => console.log("hello"),
+          1000
+        );
+      }
+      break;
     case "popupInit":
       getRefreshToken()
         .then(() => {
@@ -158,7 +99,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
           // clear notification
           setNotifyCount(0, () => {
             chrome.browserAction.setBadgeText({ text: "" });
-            response({ success: true });
+            response({ success: true, searching: true });
           });
         })
         .catch((err) => {
