@@ -7,13 +7,19 @@ import LoadingSkeleton from "./LoadingSkeleton";
 const AppRouter = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [searching, setSearching] = useState(false);
+  const [searchState, setSearchState] = useState("rest");
 
   chrome.runtime.sendMessage({ type: "popupInit" }, (response) => {
     setLoading(false);
     if (response && response.success) {
       setLoggedIn(true);
-      setSearching(response.searching);
+      // set default status
+
+      if (response.searching) {
+        setSearchState("searching");
+      } else {
+        setSearchState("rest");
+      }
     }
   });
 
@@ -24,7 +30,11 @@ const AppRouter = () => {
       ) : (
         <div>
           {loggedIn ? (
-            <Main setLoggedIn={setLoggedIn} searching={searching} />
+            <Main
+              setLoggedIn={setLoggedIn}
+              searchState={searchState}
+              setSearchState={setSearchState}
+            />
           ) : (
             <Login setLoggedIn={setLoggedIn} />
           )}

@@ -34,18 +34,6 @@ socket.on("notifyNewLink", (payload) => {
   });
 });
 
-socket.on("notifyNewLike", (payload) => {
-  console.log("notify new link");
-
-  const { title, message } = payload;
-  chrome.notifications.create("", {
-    title,
-    message,
-    iconUrl: "img/icons/icon@128.png",
-    type: "basic",
-  });
-});
-
 function bindSocketToUID() {
   getAccessToken()
     .then((token) => {
@@ -76,7 +64,7 @@ let statusInterval = null;
 /** background script message passing core logic */
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   switch (msg.type) {
-    case "findmatch":
+    case "findMatch":
       if (!statusInterval) {
         statusInterval = setIntervalAndExecute(
           () => console.log("hello"),
@@ -85,12 +73,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       }
       break;
     case "cancelMatch":
-      if (!statusInterval) {
-        statusInterval = setIntervalAndExecute(
-          () => console.log("hello"),
-          1000
-        );
-      }
+      clearInterval(statusInterval);
+      statusInterval = null;
       break;
     case "popupInit":
       getRefreshToken()
@@ -99,7 +83,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
           // clear notification
           setNotifyCount(0, () => {
             chrome.browserAction.setBadgeText({ text: "" });
-            response({ success: true, searching: true });
+            const searching = statusInterval ? true : false;
+            response({ success: true, searching });
           });
         })
         .catch((err) => {
