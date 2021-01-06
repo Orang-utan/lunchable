@@ -2,9 +2,13 @@ import { Socket } from 'socket.io';
 import { verify } from 'jsonwebtoken';
 import { JWT_SECRET } from './utils/config';
 
+// const users: any = {};
+// const socketToRoom: any = {};
+
 // Add listeners for socket connections here. This should include authorization messages,
 // as well as things like real-time chat. However, for basic mutations, prefer to use
 // the HTTP API instead.
+
 const onConnection = (socket: Socket): void => {
   console.log(`Socket ${socket.id} connected...`);
 
