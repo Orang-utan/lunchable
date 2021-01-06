@@ -14,7 +14,7 @@ function findAvailableRoom(rooms: IRoom[], targetMax: number): IRoom | null {
   let resultRoom = null;
   for (const room of rooms) {
     // TODO: check if any participants belong to same group / are friends
-    if (room.participants.length < targetMax && !room.completed) {
+    if (room.participants.length < targetMax) {
       resultRoom = room;
       break;
     }
@@ -38,9 +38,6 @@ router.post('/find', auth, async (req, res) => {
   // if room available join, else create
   if (roomToJoin) {
     roomToJoin.participants.push(user.id);
-    if (roomToJoin.participants.length + 1 >= roomToJoin.maxParticipants) {
-      // TODO: if max capacity reached notify creator via socket notification
-    }
     await roomToJoin.save();
 
     // update user
@@ -111,6 +108,40 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
 
   const room = await Room.findById(roomId);
   if (!room) return errorHandler(res, 'Invalid Room ID provided.');
+
+  if (room.completed)
+    return res
+      .status(200)
+      .json({ message: 'Cannot cancel room because lunch already happened.' });
+
+  await Room.findByIdAndDelete(roomId);
+  return res.status(200).json({ message: 'Match Cancelled' });
+});
+
+/**
+ * Complete Match after video chat
+ */
+router.post('/complete/:roomId', auth, async (req, res) => {
+  const { userId } = req;
+  const user = await User.findById(userId);
+  if (!user) return errorHandler(res, 'User does not exist.');
+
+  const roomId = req.params.roomId;
+  if (!roomId) return errorHandler(res, 'No Room ID provided.');
+
+  const room = await Room.findById(roomId);
+  if (!room) return errorHandler(res, 'Invalid Room ID provided.');
+
+  room.completed = false;
+  await room.save();
+
+  // once room to past lunches
+  for (const pid of room.participants) {
+    const participant = await User.findById(pid);
+    if (!participant) continue;
+    participant.pastLunches.push(roomId);
+    await participant.save();
+  }
 
   return res.status(200).json({ message: 'Match Cancelled' });
 });

@@ -7,12 +7,14 @@ interface IRoom extends mongoose.Document {
   participants: string[]; // user id
   maxParticipants: number;
   creatorId: string;
+  completed: boolean;
 }
 
 const RoomSchema = new Schema({
   participants: { type: [String], required: true },
   maxParticipants: { type: Number, required: true },
   creatorId: { type: String, required: true },
+  completed: { type: Boolean, default: false },
 });
 
 const Room = mongoose.model<IRoom>('Room', RoomSchema);
