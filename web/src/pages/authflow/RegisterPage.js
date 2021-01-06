@@ -5,6 +5,10 @@ import { AuthContext } from "../../context";
 import api from "../../api";
 import FormField from "../../components/FormField";
 
+import "../../styles/color.css";
+import "../../styles/layout.css";
+import "../../styles/typography.css";
+
 function RegisterPage() {
   const auth = useContext(AuthContext);
 
@@ -34,8 +38,9 @@ function RegisterPage() {
   }
 
   return (
-    <div className="container">
-      <h1 className="title mt-4">Register</h1>
+    <div className="login-container shadow-main">
+      <div className="h1">Register</div>
+      <br />
       <Formik
         initialValues={{ firstName: "", lastName: "", email: "", password: "" }}
         onSubmit={handleSubmit}
@@ -58,7 +63,7 @@ function RegisterPage() {
             />
             <button
               type="submit"
-              className="button is-link"
+              className="fullstretchButton primary-button"
               disabled={isSubmitting}
             >
               Submit

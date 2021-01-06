@@ -4,6 +4,10 @@ import { Redirect } from "react-router-dom";
 import { AuthContext } from "../../context";
 import FormField from "../../components/FormField";
 
+import "../../styles/color.css";
+import "../../styles/layout.css";
+import "../../styles/typography.css";
+
 function LoginPage() {
   const auth = useContext(AuthContext);
 
@@ -25,8 +29,9 @@ function LoginPage() {
   }
 
   return (
-    <div className="container">
-      <h1 className="title mt-4">Login</h1>
+    <div className="login-container shadow-main">
+      <div className="h1">Login here</div>
+      <br />
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}
@@ -38,6 +43,7 @@ function LoginPage() {
               type="email"
               label="Email"
               errors={errors}
+              className="bodyText"
             />
             <FormField
               name="password"
@@ -47,7 +53,7 @@ function LoginPage() {
             />
             <button
               type="submit"
-              className="button is-link"
+              className="fullstretchButton primary-button"
               disabled={isSubmitting}
             >
               Submit

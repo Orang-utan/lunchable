@@ -4,6 +4,9 @@ import styled from "styled-components";
 import Colors from "../common/Colors";
 import { AuthContext } from "../context";
 
+import "../styles/color.css";
+import "../styles/layout.css";
+
 const NavBarItems = styled.div`
   &:hover {
     cursor: pointer;
@@ -19,10 +22,10 @@ function Navbar() {
   }
 
   return (
-    <nav className="navbar" style={{ background: `${Colors.blue}44` }}>
-      <div className="container">
-        <div className="navbar-brand">
-          <a href="/" className="navbar-item title is-4">
+    <nav className="navbar-master" style={{ background: `${Colors.blue}44` }}>
+      <div className="nav-container">
+        <div>
+          <a href="/" className="title is-4">
             🌯 Lunchable
           </a>
         </div>
@@ -36,14 +39,14 @@ function Navbar() {
                 Logout
               </NavBarItems>
             ) : (
-              <>
-                <Link to="/login" className="navbar-item">
+              <React.Fragment>
+                <Link to="/login" className="navbar-links">
                   Login
                 </Link>
-                <Link to="/register" className="navbar-item">
+                <Link to="/register" className="navbar-links">
                   Register
                 </Link>
-              </>
+              </React.Fragment>
             )}
           </div>
         </div>

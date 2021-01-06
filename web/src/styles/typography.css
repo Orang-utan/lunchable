@@ -1,0 +1,40 @@
+.h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.h1 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.bodyText {
+  font-size: 16px;
+  color: rgb(61, 61, 61);
+}
+
+.fullstretchButton {
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.fullstretchButton:hover {
+  opacity: 0.85;
+  transition: 0.2s;
+}
+
+.fullstretchButton:focus {
+  outline: none;
+  /* opacity: 1; */
+}

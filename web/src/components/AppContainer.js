@@ -3,12 +3,12 @@ import styled from "styled-components";
 import Navbar from "./Navbar";
 
 const FooterContainer = styled.div`
+  font-size: 14px;
   position: fixed;
   left: 0;
   bottom: 0;
   height: 50px;
   width: 100%;
-  background-color: #ecf0f1;
   color: white;
   text-align: center;
   display: flex;
@@ -25,7 +25,8 @@ const AppContainer = ({ children }) => {
       <FooterContainer>
         <h1 className="has-text-grey-light">
           Made with{" "}
-          <i className="fas fa-heart" style={{ color: "#e74c3c" }}></i> by DT
+          <i className="fas fa-heart" style={{ color: "#e74c3c" }}></i> by D.T.
+          + K.Z.
         </h1>
       </FooterContainer>
     </div>
