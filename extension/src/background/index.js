@@ -22,6 +22,7 @@ import {
 import { API_ENDPOINT } from "../services/config";
 import axios from "axios";
 import io from "socket.io-client";
+import { isAfter } from "date-fns";
 
 let socket = io.connect(API_ENDPOINT);
 let uid = null;
@@ -96,8 +97,60 @@ function emitLinkLiked(linkId, currentLikeStatus) {
   }
 }
 
+// function getRefreshToken() {
+//   return new Promise((resolve, reject) => {
+//     chrome.storage.local.get("refreshToken", (tokenPair) => {
+//       const refreshToken = tokenPair["refreshToken"];
+
+//       if (refreshToken) {
+//         resolve(refreshToken);
+//       } else {
+//         reject(new Error("refreshToken not found"));
+//       }
+//     });
+//   });
+// }
+
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   switch (msg.type) {
+    case "findmatch":
+      let counter = 0;
+      console.log("Finding match");
+
+      function fetchStatus() {
+        return new Promise((resolveMain, reject) => {
+          function fetchHelper() {
+            var networkPromise = fetch(
+              "https://jsonplaceholder.typicode.com/todos/1"
+            );
+
+            var timeOutPromise = new Promise(function (resolve, reject) {
+              setTimeout(resolve, 2000, "Timeout Done");
+            });
+
+            Promise.all([networkPromise, timeOutPromise]).then(function (
+              values
+            ) {
+              counter += 1;
+              console.log("At least 2 sec", counter);
+              if (counter !== 3) {
+                fetchStatus();
+              }
+            });
+          }
+
+          fetchHelper().then(() => resolveMain());
+        });
+      }
+
+      fetchStatus()
+        .then(() => {
+          console.log("bruh");
+          response({ success: true });
+        })
+        .catch((err) => response({ success: false, error: err }));
+      break;
+
     case "popupInit":
       getRefreshToken()
         .then(() => {
@@ -136,116 +189,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
         .then(() => {
           unbindSocketToUID();
           response({ success: true });
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "fetchMyFeed":
-      getAccessToken()
-        .then((token) => {
-          const { limit, archive, author, like } = msg.payload;
-          fetchMyFeed(token, limit, archive, author, like)
-            .then((data) => response({ success: true, links: data }))
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "fetchCurrentFriend":
-      getAccessToken()
-        .then((token) => {
-          fetchCurrentFriend(token)
-            .then((data) => response({ success: true, friend: data }))
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "sendLink":
-      getAccessToken()
-        .then((token) => {
-          const { linkUrl, recipientEmail, message } = msg.payload;
-          sendLink(token, linkUrl, recipientEmail, message)
-            .then(() => {
-              emitLinkSent(recipientEmail);
-              response({ success: true });
-            })
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "fetchPendingFriends":
-      getAccessToken()
-        .then((token) => {
-          fetchPendingFriend(token)
-            .then((data) => response({ success: true, request: data }))
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "acceptRequest":
-      getAccessToken()
-        .then((token) => {
-          const { friendReqId } = msg.payload;
-          acceptRequest(friendReqId, token)
-            .then(() => response({ success: true }))
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "rejectRequest":
-      getAccessToken()
-        .then((token) => {
-          const { friendReqId } = msg.payload;
-          rejectRequest(friendReqId, token)
-            .then(() => response({ success: true }))
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "sendFriendRequest":
-      getAccessToken()
-        .then((token) => {
-          const { email } = msg.payload;
-          sendFriendRequest(email, token)
-            .then(() => response({ success: true }))
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "fetchLinkPreview":
-      const { url } = msg.payload;
-      fetchLinkPreview("", url)
-        .then((data) => response({ success: true, data }))
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "archiveLink":
-      getAccessToken()
-        .then((token) => {
-          const { linkId } = msg.payload;
-          archiveLink(token, linkId)
-            .then(() => response({ success: true }))
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "likeLink":
-      getAccessToken()
-        .then((token) => {
-          const { linkId, currentLikeStatus } = msg.payload;
-          likeLink(token, linkId)
-            .then(() => {
-              emitLinkLiked(linkId, currentLikeStatus);
-              response({ success: true });
-            })
-            .catch((err) => response({ success: false, error: err }));
-        })
-        .catch((err) => response({ success: false, error: err }));
-      break;
-    case "fetchLikeStatus":
-      getAccessToken()
-        .then((token) => {
-          const { linkId } = msg.payload;
-          fetchLikeStatus(token, linkId)
-            .then((status) => response({ success: true, status }))
-            .catch((err) => response({ success: false, error: err }));
         })
         .catch((err) => response({ success: false, error: err }));
       break;

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import Autosuggest from "react-autosuggest";
 import { goTo } from "react-chrome-extension-router";
 import { FaSearch } from "react-icons/fa";
 import { IconContext } from "react-icons";
@@ -11,23 +9,10 @@ import "../styles/layout.css";
 import "../styles/animation.css";
 
 import "../styles/Main.css";
-import { setISOWeekYear } from "date-fns";
 
 const randNum = (a, b) => {
   return Math.floor(Math.random() * (b - a) + a);
 };
-
-const validateEmail = (email) => {
-  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return emailRegex.test(email);
-};
-
-const Tips = [
-  "Start typing for suggestions",
-  "Hit Enter to send",
-  "Hit Esc to hide suggestions",
-];
-const randomTips = Tips[Math.floor(Math.random() * Tips.length)];
 
 // Component
 const Main = ({ setLoggedIn }) => {
@@ -119,36 +104,51 @@ const Main = ({ setLoggedIn }) => {
 
   const startSearch = (e) => {
     setSearchState("searching");
+    console.log("searching");
+    chrome.runtime.sendMessage({ type: "findmatch" }, (response) => {
+      console.log(response);
+    });
   };
 
   const cancelSearch = (e) => {
     setSearchState("rest");
   };
 
+  const joinCall = (e) => {
+    console.log("Joining call");
+  };
+
   return (
     <div className="popupContainer">
       <div className="contentContainer">
-        <div className="h1">
-          {searchState === "rest"
-            ? `Ready to eat?`
-            : searchState === "searching"
-            ? `Searching for friends ...`
-            : null}
+        <div className="top-container">
+          <div className="h1">
+            {searchState === "rest"
+              ? `Ready to eat?`
+              : searchState === "searching"
+              ? `Searching for friends ...`
+              : searchState === "matched"
+              ? "Matched!"
+              : null}
+          </div>
+          <div className="body">
+            {searchState === "rest"
+              ? `Match with your friends`
+              : searchState === "searching"
+              ? `Hang on tight!`
+              : searchState === "matched"
+              ? "Yay"
+              : null}
+          </div>
+          <br />
+          {searchState === "rest" ? (
+            <div style={{ fontSize: "120px" }}>🤔</div>
+          ) : searchState === "searching" ? (
+            <EmojiPicker />
+          ) : searchState === "matched" ? (
+            <div style={{ fontSize: "120px" }}>😎</div>
+          ) : null}
         </div>
-        <div className="body">
-          {searchState === "rest"
-            ? `Match with your friends`
-            : searchState === "searching"
-            ? `Hang on tight!`
-            : null}
-        </div>
-        <br />
-        {searchState === "searching" ? (
-          <EmojiPicker />
-        ) : searchState === "matched" ? (
-          <div>Matched</div>
-        ) : null}
-        <br />
         {searchState === "rest" ? (
           <button
             className="fullstretchButton primary-button"
@@ -162,6 +162,13 @@ const Main = ({ setLoggedIn }) => {
             onClick={(e) => cancelSearch(e)}
           >
             Cancel
+          </button>
+        ) : searchState === "matched" ? (
+          <button
+            className="fullstretchButton primary-button"
+            onClick={(e) => joinCall(e)}
+          >
+            Join call →
           </button>
         ) : null}
       </div>
