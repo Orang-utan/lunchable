@@ -1,0 +1,46 @@
+.h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.body {
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.fullstretchButton {
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.fullstretchButton:hover {
+  opacity: 0.85;
+  transition: 0.2s;
+}
+
+.fullstretchButton:focus {
+  outline: none;
+  /* opacity: 1; */
+}
+
+.food-emoji {
+  border-left: solid 70px transparent;
+  border-right: solid 70px transparent;
+  font-size: 70px;
+}
