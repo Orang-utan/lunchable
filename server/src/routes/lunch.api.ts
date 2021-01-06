@@ -29,7 +29,7 @@ function findAvailableRoom(rooms: IRoom[], targetMax: number): IRoom | null {
 router.post('/find', auth, async (req, res) => {
   const { userId } = req;
   const user = await User.findById(userId);
-  if (!user) return errorHandler(res, 'User does not exist.');
+  if (!userId || !user) return errorHandler(res, 'User does not exist.');
 
   const maxParticipants = req.body.maxParticipants || 2; // if no arg, default to 2
   const rooms = await Room.find({});
@@ -40,12 +40,8 @@ router.post('/find', auth, async (req, res) => {
     roomToJoin.participants.push(user.id);
     await roomToJoin.save();
 
-    // update user
-    user.pastLunches.push(roomToJoin.id);
-    await user.save();
-
     // TODO: frontend is not ready yet lol
-    const roomUrl = `${CLIENT_URL}/lunch/${roomToJoin._id}`;
+    const roomUrl = `${CLIENT_URL}/rooms/${roomToJoin._id}`;
 
     return res.status(200).json({
       message: 'Joining Existing Room.',
@@ -60,10 +56,6 @@ router.post('/find', auth, async (req, res) => {
     creatorId: user.id,
   });
   await newRoom.save();
-
-  // update user
-  user.pastLunches.push(newRoom.id);
-  await user.save();
 
   return res.status(200).json({
     message: 'No Available Rooms. Created New Room.',
@@ -92,7 +84,7 @@ router.get('/status/:roomId', auth, async (req, res) => {
       .json({ message: 'Room is still empty.', completed: false });
 
   // TODO: frontend is not ready yet lol
-  const roomUrl = `${CLIENT_URL}/lunch/${room.id}`;
+  const roomUrl = `${CLIENT_URL}/rooms/${room.id}`;
   return res.status(200).json({
     message: 'Room is ready. More than one person has joined.',
     completed: true,

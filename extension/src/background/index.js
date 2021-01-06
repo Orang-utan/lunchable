@@ -1,6 +1,6 @@
 import axios from "axios";
 import io from "socket.io-client";
-import { fetchMe } from "../services/apiRequests";
+import { fetchMe } from "../services/apiFactory";
 import { API_ENDPOINT } from "../services/config";
 import {
   getAccessToken,
@@ -54,12 +54,11 @@ function unbindSocketToUID() {
 }
 
 /** interval fetching logic */
+let statusInterval = null;
 function setIntervalAndExecute(fn, t) {
   fn();
   return setInterval(fn, t);
 }
-
-let statusInterval = null;
 
 /** background script message passing core logic */
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
@@ -113,7 +112,10 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     case "logout":
       setTokens("", "")
         .then(() => {
+          // clean up
           unbindSocketToUID();
+          clearInterval(statusInterval);
+          statusInterval = null;
           response({ success: true });
         })
         .catch((err) => response({ success: false, error: err }));

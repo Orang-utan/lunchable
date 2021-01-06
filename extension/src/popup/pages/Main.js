@@ -37,7 +37,6 @@ const Main = ({ setLoggedIn, searchState, setSearchState }) => {
 
   const startSearch = (e) => {
     setSearchState("searching");
-    console.log("searching");
     chrome.runtime.sendMessage({ type: "findMatch" }, (response) => {
       console.log(response);
     });
