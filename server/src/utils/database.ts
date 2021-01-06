@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { ATLAS_URI, NODE_ENV } from './config';
 
-mongoose.Promise = global.Promise;
+(<any>mongoose).Promise = global.Promise;
 
 /* uncomment for database logger */
 // mongoose.set('debug', process.env.DEBUG !== 'production');

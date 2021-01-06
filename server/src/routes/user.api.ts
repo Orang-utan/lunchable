@@ -25,7 +25,7 @@ router.post('/signup', async (req, res) => {
   }
 
   // hash + salt password
-  return hash(password, saltRounds, (err, hashedPassword) => {
+  return hash(password, saltRounds, (err: Error, hashedPassword) => {
     if (err) {
       return errorHandler(res, err.message);
     }
@@ -106,27 +106,27 @@ router.get('/me', auth, (req, res) => {
 
   return User.findById(userId)
     .select('firstName lastName email _id')
-    .then((user) => {
+    .then((user: any) => {
       if (!user) return errorHandler(res, 'User does not exist.');
 
       return res.status(200).json({ success: true, data: user });
     })
-    .catch((err) => errorHandler(res, err.message));
+    .catch((err: Error) => errorHandler(res, err.message));
 });
 
 /* TESTING ENDPOINTS BELOW (DELETE IN PRODUCTION) */
 /* fetch all users in database */
 router.get('/', (_, res) => {
   User.find({})
-    .then((result) => res.status(200).json({ success: true, result }))
-    .catch((e) => errorHandler(res, e));
+    .then((result: IUser[]) => res.status(200).json({ success: true, result }))
+    .catch((e: Error) => errorHandler(res, e.message));
 });
 
 /* delete all users in database */
 router.delete('/', (_, res) => {
   User.deleteMany({})
     .then(() => res.status(200).json({ success: true }))
-    .catch((e) => errorHandler(res, e));
+    .catch((e: Error) => errorHandler(res, e.message));
 });
 
 export default router;

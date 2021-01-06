@@ -4,6 +4,9 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
+  "eslint.workingDirectories": [
+    { "directory": "server", "changeProcessCWD": true }
+  ],
   "plugins": ["@typescript-eslint"],
   "ignorePatterns": ["build/**"],
   "rules": {

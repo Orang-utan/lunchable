@@ -44,9 +44,14 @@ router.post('/find', auth, async (req, res) => {
     user.pastLunches.push(roomToJoin.id);
     await user.save();
 
-    return res
-      .status(200)
-      .json({ message: 'Joined Existing Room.', roomId: roomToJoin._id });
+    // TODO: frontend is not ready yet lol
+    const roomUrl = `${CLIENT_URL}/lunch/${roomToJoin._id}`;
+
+    return res.status(200).json({
+      message: 'Joining Existing Room.',
+      roomId: roomToJoin._id,
+      roomUrl,
+    });
   }
 
   const newRoom = new Room({
@@ -150,15 +155,15 @@ router.post('/complete/:roomId', auth, async (req, res) => {
 /* fetch all rooms in database */
 router.get('/', (_, res) => {
   Room.find({})
-    .then((result) => res.status(200).json({ success: true, result }))
-    .catch((e) => errorHandler(res, e));
+    .then((result: IRoom[]) => res.status(200).json({ success: true, result }))
+    .catch((e: Error) => errorHandler(res, e.message));
 });
 
 /* delete all rooms in database */
 router.delete('/', (_, res) => {
   Room.deleteMany({})
     .then(() => res.status(200).json({ success: true }))
-    .catch((e) => errorHandler(res, e));
+    .catch((e: Error) => errorHandler(res, e.message));
 });
 
 export default router;

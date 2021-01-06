@@ -24,7 +24,7 @@ const generateRefreshToken = (user: IUser): any => {
 
   return User.findOneAndUpdate({ email: user.email }, { refreshToken })
     .then(() => refreshToken)
-    .catch((err) => {
+    .catch((err: Error) => {
       throw err;
     });
 };
@@ -36,13 +36,13 @@ const validateRefreshToken = (refreshToken: string): Promise<any> =>
         rej(new AuthError('refreshExpired', 'Refresh token expired'));
       } else {
         User.findOne({ refreshToken })
-          .then((user) => {
+          .then((user: IUser | null) => {
             if (!user) {
               rej(new AuthError('invalidToken', 'Refresh token invalid'));
             }
             res(user);
           })
-          .catch((e) => {
+          .catch((e: Error) => {
             rej(e);
           });
       }
