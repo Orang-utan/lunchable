@@ -5,13 +5,13 @@ switch (process.env.NODE_ENV) {
   case 'development':
     console.log("Environment is 'development'");
     configDotenv({
-      path: resolve(__dirname, '../../config/.env.development'),
+      path: resolve(__dirname, '../../../config/.env.development'),
     });
     break;
   case 'test':
     console.log("Environment is 'test'");
     configDotenv({
-      path: resolve(__dirname, '../../config/.env.test'),
+      path: resolve(__dirname, '../../../config/.env.test'),
     });
     break;
   case 'production':
@@ -25,6 +25,7 @@ switch (process.env.NODE_ENV) {
 const { NODE_ENV } = process.env;
 const ATLAS_URI =
   process.env.ATLAS_URI || 'mongodb://localhost:27017/myproject';
+
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
 
 // auth config
