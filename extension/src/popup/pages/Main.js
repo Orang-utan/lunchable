@@ -5,11 +5,6 @@ import { goTo } from "react-chrome-extension-router";
 import { FaSearch } from "react-icons/fa";
 import { IconContext } from "react-icons";
 
-import Contact from "./Contact";
-import PFItem from "../components/PFItem";
-import Toast from "../components/Toast";
-import CollapsibleInput from "../components/CollapsibleInput";
-
 import "../styles/Main.css";
 
 const PopupContainer = styled.div`
@@ -200,139 +195,12 @@ const Main = ({ setLoggedIn }) => {
     chrome.tabs.create({ active: true, url });
   };
 
-  // *******************************
-  // BELOW ARE AUTOSUGGEST FUNCTIONS
-  // *******************************
-
-  const getSuggestions = (value) => {
-    const inputValue = value.trim().toLowerCase();
-    const inputLength = inputValue.length;
-
-    return inputLength === 0
-      ? []
-      : friends.filter((friend) => {
-          const fullName = `${friend.firstName} ${friend.lastName}`;
-          return fullName.toLowerCase().slice(0, inputLength) === inputValue;
-        });
-  };
-  const getSuggestionValue = (suggestion) => suggestion.email;
-  const renderSuggestion = (suggestion) => {
-    return (
-      <div>
-        {suggestion.firstName} {suggestion.lastName}
-      </div>
-    );
-  };
-
-  const onRecipientChanged = (e, { newValue }) => {
-    setRecipient(newValue);
-  };
-
-  const onSuggestionsFetchRequested = ({ value }) => {
-    setSuggestions(getSuggestions(value));
-  };
-
-  const onSuggestionsClearRequested = () => {
-    setSuggestions([]);
-  };
-
-  const onSuggestionSelected = () => {
-    // clear suggestions after selected
-    setSuggestions([]);
-  };
-
-  const inputProps = {
-    placeholder: randomTips,
-    value: recipient,
-    onChange: onRecipientChanged,
-    onKeyDown: handleEnterKey,
-    ref: (input) => input && input.focus(),
-  };
-
   return (
     <PopupContainer>
       <ContentContainer>
         <Headline style={{ display: "inline-block" }}>
           Share this link with
         </Headline>
-        <Toast toast={toast} setToast={setToast} />
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={onSuggestionsClearRequested}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          alwaysRenderSuggestions={true}
-          focusInputOnSuggestionClick={true}
-          highlightFirstSuggestion={false}
-          onSuggestionSelected={onSuggestionSelected}
-          inputProps={inputProps}
-        />
-
-        <Headline style={{ marginBottom: "15px", display: "inline-block" }}>
-          My Inbox
-        </Headline>
-        <SearchButton onClick={() => setInput({ show: !input.show })}>
-          <IconContext.Provider value={{ color: "white", size: "17px" }}>
-            <FaSearch />
-          </IconContext.Provider>
-        </SearchButton>
-        <CollapsibleInput input={input} setInput={setInput} />
-        {!feedLoading && (
-          <>
-            {myFeed && myFeed.length > 0 ? (
-              <div>
-                {myFeed.map((val) => {
-                  return (
-                    <PFItem
-                      key={val._id}
-                      data={val}
-                      myFeed={myFeed}
-                      setMyFeed={setMyFeed}
-                    />
-                  );
-                })}
-                <MoreButton
-                  style={{ margin: "0px 0px 20px 75px" }}
-                  onClick={() =>
-                    openURL("https://pigeon-webapp.herokuapp.com/")
-                  }
-                >
-                  See More
-                </MoreButton>
-              </div>
-            ) : (
-              <div
-                style={{
-                  width: "83%",
-                  padding: "0px 20px 40px 20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Paragraph style={{ textAlign: "center" }}>
-                  Oh hey! Looks like you don't have any new links.
-                </Paragraph>
-                <img
-                  src="img/illustrations/highfive.png"
-                  style={{
-                    maxHeight: "50vh",
-                    maxWidth: "50vw",
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-            )}
-          </>
-        )}
-        <div style={{ marginLeft: "50px" }}>
-          <SecondaryButton onClick={() => goTo(Contact)}>
-            Manage Contacts
-          </SecondaryButton>
-          <SecondaryButton onClick={logout}>Logout</SecondaryButton>
-        </div>
       </ContentContainer>
     </PopupContainer>
   );
