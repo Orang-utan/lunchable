@@ -14,6 +14,7 @@ import RegisterPage from "./pages/authflow/RegisterPage";
 import IndexPage from "./pages/IndexPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashboardPage from "./pages/DashboardPage";
+import RoomPage from "./pages/RoomPage";
 
 const queryCache = new QueryCache();
 
@@ -51,6 +52,7 @@ function App() {
                 <PublicRoute exact path="/" component={IndexPage} />
                 <PublicRoute exact path="/login" component={LoginPage} />
                 <PublicRoute exact path="/register" component={RegisterPage} />
+                <PrivateRoute exact path="/room/:id" component={RoomPage} />
                 <PrivateRoute
                   exact
                   path="/dashboard"
