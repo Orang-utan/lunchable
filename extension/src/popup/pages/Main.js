@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { sendAmplitudeData } from "../util/amplitude";
+
 import { goTo } from "react-chrome-extension-router";
 import { FaSearch } from "react-icons/fa";
 import { IconContext } from "react-icons";
@@ -21,6 +23,10 @@ const Main = ({ setLoggedIn }) => {
   const [recipient, setRecipient] = useState("");
   const [friends, setFriends] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    sendAmplitudeData("Opened widget");
+  }, []);
 
   const EmojiPicker = () => {
     let num = randNum(0, 3);
