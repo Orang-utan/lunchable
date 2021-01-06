@@ -54,4 +54,20 @@ function findLunch(ACCESS_TOKEN, maxParticipants = 2) {
   });
 }
 
-export { login, fetchMe, findLunch };
+function cancelLunch(ACCESS_TOKEN, roomId) {
+  return new Promise((resolve, reject) => {
+    secureAxios({
+      url: `/api/lunches/cancel/${roomId}`,
+      method: "POST",
+      timeout: 0,
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => resolve(res.data))
+      .catch((err) => reject(err));
+  });
+}
+
+export { login, fetchMe, findLunch, cancelLunch };

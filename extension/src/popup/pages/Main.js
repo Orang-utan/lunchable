@@ -35,19 +35,24 @@ const Main = ({ setLoggedIn, searchState, setSearchState }) => {
     });
   };
 
-  const startSearch = (e) => {
+  const startSearch = () => {
     setSearchState("searching");
     chrome.runtime.sendMessage({ type: "findMatch" }, (response) => {
-      console.log(response);
+      setSearchState(response.status);
     });
   };
 
-  const cancelSearch = (e) => {
+  const cancelSearch = () => {
     setSearchState("rest");
     chrome.runtime.sendMessage({ type: "cancelMatch" }, (response) => {});
   };
 
-  const joinCall = (e) => {
+  const endCall = () => {
+    setSearchState("rest");
+    chrome.runtime.sendMessage({ type: "endCall" });
+  };
+
+  const joinCall = () => {
     console.log("Joining call");
   };
 
@@ -85,24 +90,27 @@ const Main = ({ setLoggedIn, searchState, setSearchState }) => {
         {searchState === "rest" ? (
           <button
             className="fullstretchButton primary-button"
-            onClick={(e) => startSearch(e)}
+            onClick={startSearch}
           >
             Join to eat
           </button>
         ) : searchState === "searching" ? (
           <button
             className="fullstretchButton secondary-button"
-            onClick={(e) => cancelSearch(e)}
+            onClick={cancelSearch}
           >
             Cancel
           </button>
         ) : searchState === "matched" ? (
-          <button
-            className="fullstretchButton primary-button"
-            onClick={(e) => joinCall(e)}
-          >
-            Join call →
-          </button>
+          <>
+            <button
+              className="fullstretchButton primary-button"
+              onClick={joinCall}
+            >
+              Join call →
+            </button>
+            <button onClick={endCall}>Call Already Ended?</button>
+          </>
         ) : null}
         <button onClick={logout}>Logout</button>
       </div>

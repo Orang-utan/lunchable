@@ -1,6 +1,6 @@
 import axios from "axios";
 import io from "socket.io-client";
-import { fetchMe } from "../services/apiFactory";
+import { fetchMe, findLunch, cancelLunch } from "../services/apiFactory";
 import { API_ENDPOINT } from "../services/config";
 import {
   getAccessToken,
@@ -55,6 +55,7 @@ function unbindSocketToUID() {
 
 /** interval fetching logic */
 let statusInterval = null;
+let matched = false;
 function setIntervalAndExecute(fn, t) {
   fn();
   return setInterval(fn, t);
@@ -64,16 +65,32 @@ function setIntervalAndExecute(fn, t) {
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   switch (msg.type) {
     case "findMatch":
-      if (!statusInterval) {
-        statusInterval = setIntervalAndExecute(
-          () => console.log("hello"),
-          1000
-        );
-      }
+      getAccessToken().then((accessToken) => {
+        findLunch(accessToken, 2).then((res) => {
+          const { roomUrl, message, roomId } = res;
+          if (roomUrl) {
+            matched = true;
+            response({ roomUrl, message, status: "matched" });
+          } else {
+            if (!statusInterval) {
+              statusInterval = setIntervalAndExecute(
+                () => console.log("hello"),
+                1000
+              );
+            }
+            response({ roomId, message, status: "searching" });
+          }
+        });
+      });
       break;
     case "cancelMatch":
       clearInterval(statusInterval);
       statusInterval = null;
+
+      break;
+    case "endCall":
+      // TODO: need some API endpoint here
+      matched = false;
       break;
     case "popupInit":
       getRefreshToken()
@@ -83,7 +100,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
           setNotifyCount(0, () => {
             chrome.browserAction.setBadgeText({ text: "" });
             const searching = statusInterval ? true : false;
-            response({ success: true, searching });
+            response({ success: true, searching, matched });
           });
         })
         .catch((err) => {
@@ -113,6 +130,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       setTokens("", "")
         .then(() => {
           // clean up
+          matched = false;
           unbindSocketToUID();
           clearInterval(statusInterval);
           statusInterval = null;

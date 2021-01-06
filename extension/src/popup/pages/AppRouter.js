@@ -14,11 +14,13 @@ const AppRouter = () => {
     if (response && response.success) {
       setLoggedIn(true);
       // set default status
-
       if (response.searching) {
         setSearchState("searching");
-      } else {
-        setSearchState("rest");
+        return;
+      }
+      if (response.matched) {
+        setSearchState("matched");
+        return;
       }
     }
   });
