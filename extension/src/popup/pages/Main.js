@@ -9,25 +9,13 @@ import "../styles/typography.css";
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/animation.css";
-
 import "../styles/Main.css";
 
 const randNum = (a, b) => {
   return Math.floor(Math.random() * (b - a) + a);
 };
 
-// Component
-const Main = ({ setLoggedIn }) => {
-  const [searchState, setSearchState] = useState("rest");
-
-  const [recipient, setRecipient] = useState("");
-  const [friends, setFriends] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-
-  useEffect(() => {
-    sendAmplitudeData("Opened widget");
-  }, []);
-
+const Main = ({ setLoggedIn, searchState, setSearchState }) => {
   const EmojiPicker = () => {
     let num = randNum(0, 3);
     return (
@@ -39,88 +27,34 @@ const Main = ({ setLoggedIn }) => {
     );
   };
 
-  const [toast, setToast] = useState({
-    show: false,
-    message: "",
-  });
-  const [input, setInput] = useState({
-    show: false,
-  });
-
-  const [myFeed, setMyFeed] = useState();
-  const [feedLoading, setFeedLoading] = useState(true);
-
-  const fetchMyFeed = () => {
-    setFeedLoading(true);
-    const payload = { limit: 5 };
-    chrome.runtime.sendMessage({ type: "fetchMyFeed", payload }, (response) => {
-      if (response && response.success) {
-        setMyFeed(response.links);
-        setFeedLoading(false);
-        return;
-      }
-    });
-  };
-
-  const fetchCurrentFriend = () => {
-    chrome.runtime.sendMessage({ type: "fetchCurrentFriend" }, (response) => {
-      if (response && response.success) {
-        setFriends(response.friend);
-        setSuggestions(response.friend);
-        return;
-      }
-    });
-  };
-
-  const handleSend = (email, message) => {
-    const query = { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT };
-
-    chrome.tabs.query(query, (tabs) => {
-      const linkUrl = tabs[0].url;
-      const recipientEmail = email;
-
-      const payload = { linkUrl, recipientEmail, message };
-
-      chrome.runtime.sendMessage({ type: "sendLink", payload }, (response) => {
-        if (response && response.success) {
-          setToast({ show: true, message: "✅ Your link is sent succesfully" });
-          setRecipient("");
-          return;
-        }
-        console.log(response.error);
-        setToast({ show: true, message: "😔 Oops. Something went wrong" });
-      });
-    });
-  };
-
   const logout = () => {
     chrome.runtime.sendMessage({ type: "logout" }, (response) => {
       if (response && response.success) {
         setLoggedIn(false);
         return;
       }
-      setToast({ show: true, message: "😔 Oops. Something went wrong" });
+      console.log("Error");
     });
   };
 
-  useEffect(() => {
-    fetchCurrentFriend();
-    fetchMyFeed();
-  }, []);
-
-  const startSearch = (e) => {
+  const startSearch = () => {
     setSearchState("searching");
-    console.log("searching");
-    chrome.runtime.sendMessage({ type: "findmatch" }, (response) => {
-      console.log(response);
+    chrome.runtime.sendMessage({ type: "findMatch" }, (response) => {
+      setSearchState(response.status);
     });
   };
 
-  const cancelSearch = (e) => {
+  const cancelSearch = () => {
     setSearchState("rest");
+    chrome.runtime.sendMessage({ type: "cancelMatch" }, (response) => {});
   };
 
-  const joinCall = (e) => {
+  const endCall = () => {
+    setSearchState("rest");
+    chrome.runtime.sendMessage({ type: "endCall" });
+  };
+
+  const joinCall = () => {
     console.log("Joining call");
   };
 
@@ -158,25 +92,29 @@ const Main = ({ setLoggedIn }) => {
         {searchState === "rest" ? (
           <button
             className="fullstretchButton primary-button"
-            onClick={(e) => startSearch(e)}
+            onClick={startSearch}
           >
             Join to eat
           </button>
         ) : searchState === "searching" ? (
           <button
             className="fullstretchButton secondary-button"
-            onClick={(e) => cancelSearch(e)}
+            onClick={cancelSearch}
           >
             Cancel
           </button>
         ) : searchState === "matched" ? (
-          <button
-            className="fullstretchButton primary-button"
-            onClick={(e) => joinCall(e)}
-          >
-            Join call →
-          </button>
+          <>
+            <button
+              className="fullstretchButton primary-button"
+              onClick={joinCall}
+            >
+              Join call →
+            </button>
+            <button onClick={endCall}>Call Already Ended?</button>
+          </>
         ) : null}
+        <button onClick={logout}>Logout</button>
       </div>
     </div>
   );

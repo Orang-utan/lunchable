@@ -5,7 +5,7 @@
   "author": "Orang-utan",
   "private": true,
   "scripts": {
-    "setup": "concurrently \"yarn --cwd client install\" \"yarn --cwd server install\" \"yarn --cwd extension install\"",
+    "setup": "concurrently \"yarn --cwd web install\" \"yarn --cwd server install\" \"yarn --cwd extension install\"",
     "dev": "concurrently -n web,server -c blue,red \"yarn --cwd web start\" \"yarn --cwd server dev\"",
     "extension": "yarn --cwd extension start:chrome",
     "format": "prettier --write ."
