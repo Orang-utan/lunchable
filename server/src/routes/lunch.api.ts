@@ -43,13 +43,18 @@ router.post('/find', auth, async (req, res) => {
   const rooms = await Room.find({});
   const roomToJoin = findAvailableRoom(rooms, maxParticipants, userId);
 
-  // if room available join, else create
+  // if room available join, then join
   if (roomToJoin) {
     roomToJoin.participants.push(user.id);
     await roomToJoin.save();
 
-    user.matchStatus = 'matched';
-    await user.save();
+    // defensively update everyone's status to matched
+    for (const pid of roomToJoin.participants) {
+      const participant = await User.findById(pid);
+      if (!participant) continue;
+      participant.matchStatus = 'matched';
+      await participant.save();
+    }
 
     const roomUrl = `${CLIENT_URL}/rooms/${roomToJoin._id}`;
     return res.status(200).json({
@@ -59,6 +64,7 @@ router.post('/find', auth, async (req, res) => {
     });
   }
 
+  // else create a new room
   const newRoom = new Room({
     participants: [user.id],
     maxParticipants,
@@ -94,10 +100,6 @@ router.get('/status/:roomId', auth, async (req, res) => {
     return res
       .status(200)
       .json({ message: 'Room is still empty.', fulfilled: false });
-
-  // there is someone in the room, change sender match status
-  user.matchStatus = 'matched';
-  await user.save();
 
   const roomUrl = `${CLIENT_URL}/rooms/${room.id}`;
   return res.status(200).json({
