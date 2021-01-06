@@ -8,6 +8,7 @@ interface IRoom extends mongoose.Document {
   maxParticipants: number;
   creatorId: string;
   completed: boolean;
+  timestamp: Date;
 }
 
 const RoomSchema = new Schema({
@@ -15,6 +16,7 @@ const RoomSchema = new Schema({
   maxParticipants: { type: Number, required: true },
   creatorId: { type: String, required: true },
   completed: { type: Boolean, default: false },
+  timestamp: { type: Date, default: Date.now },
 });
 
 const Room = mongoose.model<IRoom>('Room', RoomSchema);

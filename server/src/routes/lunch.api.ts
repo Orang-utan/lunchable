@@ -10,11 +10,16 @@ const router = express.Router();
 /***************************/
 // Utility functions below
 /***************************/
-function findAvailableRoom(rooms: IRoom[], targetMax: number): IRoom | null {
+function findAvailableRoom(
+  rooms: IRoom[],
+  targetMax: number,
+  uid: string
+): IRoom | null {
   let resultRoom = null;
   for (const room of rooms) {
     // TODO: check if any participants belong to same group / are friends
-    if (room.participants.length < targetMax) {
+    // check if room is not max & creator is not the same as current user
+    if (room.participants.length < targetMax && room.creatorId !== uid) {
       resultRoom = room;
       break;
     }
@@ -30,19 +35,23 @@ router.post('/find', auth, async (req, res) => {
   const { userId } = req;
   const user = await User.findById(userId);
   if (!userId || !user) return errorHandler(res, 'User does not exist.');
+  // if user is matched or searching, do not find new match!
+  if (user.matchStatus === 'matched' || user.matchStatus === 'searching')
+    return errorHandler(res, 'User is currently matched or still searching.');
 
   const maxParticipants = req.body.maxParticipants || 2; // if no arg, default to 2
   const rooms = await Room.find({});
-  const roomToJoin = findAvailableRoom(rooms, maxParticipants);
+  const roomToJoin = findAvailableRoom(rooms, maxParticipants, userId);
 
   // if room available join, else create
   if (roomToJoin) {
     roomToJoin.participants.push(user.id);
     await roomToJoin.save();
 
-    // TODO: frontend is not ready yet lol
-    const roomUrl = `${CLIENT_URL}/rooms/${roomToJoin._id}`;
+    user.matchStatus = 'matched';
+    await user.save();
 
+    const roomUrl = `${CLIENT_URL}/rooms/${roomToJoin._id}`;
     return res.status(200).json({
       message: 'Joining Existing Room.',
       roomId: roomToJoin._id,
@@ -56,6 +65,9 @@ router.post('/find', auth, async (req, res) => {
     creatorId: user.id,
   });
   await newRoom.save();
+
+  user.matchStatus = 'searching';
+  await user.save();
 
   return res.status(200).json({
     message: 'No Available Rooms. Created New Room.',
@@ -72,33 +84,38 @@ router.get('/status/:roomId', auth, async (req, res) => {
   if (!user) return errorHandler(res, 'User does not exist.');
 
   const roomId = req.params.roomId;
-  if (!roomId) return errorHandler(res, 'No Match ID provided.');
+  if (!roomId) return errorHandler(res, 'No Room ID provided.');
 
   const room = await Room.findById(roomId);
-  if (!room) return errorHandler(res, 'Invalid Match ID provided.');
+  if (!room) return errorHandler(res, 'Invalid Room ID provided.');
 
   // no one in room except
   if (room.participants.length <= 1)
     return res
       .status(200)
-      .json({ message: 'Room is still empty.', completed: false });
+      .json({ message: 'Room is still empty.', fulfilled: false });
 
-  // TODO: frontend is not ready yet lol
+  // there is someone in the room, change sender match status
+  user.matchStatus = 'matched';
+  await user.save();
+
   const roomUrl = `${CLIENT_URL}/rooms/${room.id}`;
   return res.status(200).json({
     message: 'Room is ready. More than one person has joined.',
-    completed: true,
+    fulfilled: true,
     roomUrl,
   });
 });
 
 /**
- * Cancel Match
+ * Cancel Match Search
  */
 router.post('/cancel/:roomId', auth, async (req, res) => {
   const { userId } = req;
   const user = await User.findById(userId);
   if (!user) return errorHandler(res, 'User does not exist.');
+  if (user.matchStatus === 'matched')
+    return errorHandler(res, 'Unable to cancel: user matched already.');
 
   const roomId = req.params.roomId;
   if (!roomId) return errorHandler(res, 'No Room ID provided.');
@@ -109,10 +126,26 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
   if (room.completed)
     return res
       .status(200)
-      .json({ message: 'Cannot cancel room because lunch already happened.' });
+      .json({ message: 'Unable to cancel: lunch already happened.' });
 
-  await Room.findByIdAndDelete(roomId);
-  return res.status(200).json({ message: 'Match Cancelled' });
+  // defensively update everyone's status
+  for (const uid of room.participants) {
+    const targetUser = await User.findById(uid);
+    if (!targetUser) continue;
+    targetUser.matchStatus = 'rest';
+    await targetUser.save();
+  }
+
+  if (room.creatorId === userId) {
+    await Room.findByIdAndDelete(roomId);
+    return res
+      .status(200)
+      .json({ message: 'Room is now deleted, your search is cancelled.' });
+  }
+
+  return res
+    .status(200)
+    .json({ message: 'Room still exist, please cancel search on the client.' });
 });
 
 /**
@@ -122,25 +155,38 @@ router.post('/complete/:roomId', auth, async (req, res) => {
   const { userId } = req;
   const user = await User.findById(userId);
   if (!user) return errorHandler(res, 'User does not exist.');
+  if (user.matchStatus === 'searching')
+    return errorHandler(res, 'Unable to complete: user is still searching.');
+
+  // reset anyways
+  user.matchStatus = 'rest';
+  await user.save();
 
   const roomId = req.params.roomId;
-  if (!roomId) return errorHandler(res, 'No Room ID provided.');
+  if (!roomId) return errorHandler(res, 'No Room ID. User status was reset.');
 
-  const room = await Room.findById(roomId);
-  if (!room) return errorHandler(res, 'Invalid Room ID provided.');
+  let room;
+  try {
+    room = await Room.findById(roomId);
+  } catch (err) {
+    return errorHandler(res, 'Invalid Room ID. User status was reset.');
+  }
+  if (!room)
+    return errorHandler(res, 'Invalid Room ID. User status was reset.');
 
-  room.completed = false;
+  room.completed = true;
   await room.save();
 
-  // once room to past lunches
+  // set room to past lunches
   for (const pid of room.participants) {
     const participant = await User.findById(pid);
     if (!participant) continue;
     participant.pastLunches.push(roomId);
+    participant.matchStatus = 'rest';
     await participant.save();
   }
 
-  return res.status(200).json({ message: 'Match Cancelled' });
+  return res.status(200).json({ message: 'Room is completed now.' });
 });
 
 /* TESTING ENDPOINTS BELOW (DELETE IN PRODUCTION) */
