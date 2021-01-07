@@ -36,17 +36,19 @@ const AppRouter = () => {
 
   return (
     <Router>
-      {loading ? (
-        <LoadingSkeleton />
-      ) : (
-        <div className="popupContainer">
-          {pState.loggedIn ? (
-            <Main setPState={setPState} pState={pState} />
-          ) : (
-            <Login setPState={setPState} />
-          )}
-        </div>
-      )}
+      <div className="popupContainer">
+        {loading ? (
+          <LoadingSkeleton />
+        ) : (
+          <>
+            {pState.loggedIn ? (
+              <Main setPState={setPState} pState={pState} />
+            ) : (
+              <Login setPState={setPState} />
+            )}
+          </>
+        )}
+      </div>
     </Router>
   );
 };

@@ -84,7 +84,7 @@ const Main = ({ pState, setPState }) => {
   };
 
   return pState.matchStatus === "complete" ? (
-    <Feedback />
+    <Feedback pState={pState} setPState={setPState} />
   ) : (
     <div className="contentContainer">
       <div className="top-container">
