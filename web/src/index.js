@@ -3,9 +3,11 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import axios from "axios";
 
-console.log("hello world");
-console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === "production") {
+  axios.defaults.baseURL = "https://lunchable-api.herokuapp.com/";
+}
 
 ReactDOM.render(
   <StrictMode>
