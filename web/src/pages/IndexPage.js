@@ -1,5 +1,3 @@
-import { useQuery } from "react-query";
-import api from "../api";
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
