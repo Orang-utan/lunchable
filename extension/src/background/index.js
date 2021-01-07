@@ -134,16 +134,12 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       break;
     case "login":
       const { newRefreshToken } = msg.payload;
-      axios({
-        method: "POST",
-        url: `${API_ENDPOINT}/api/users/refreshToken`,
-        timeout: 0,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify({ refreshToken: newRefreshToken }),
-      })
+      axios
+        .post(`${API_ENDPOINT}/api/users/refreshToken`, {
+          refreshToken: newRefreshToken,
+        })
         .then((res) => {
+          console.log("success");
           const newAccessToken = res.data.accessToken;
           setTokens(newAccessToken, newRefreshToken)
             .then(() => response({ success: true }))
