@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
+import Star1 from "../../img/star1.svg";
+import Star2 from "../../img/star2.svg";
 import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
-
-import Star1 from "../../img/star1.svg";
-import Star2 from "../../img/star2.svg";
 
 const Feedback = ({ pState, setPState }) => {
   const [stars, setStars] = useState(1);

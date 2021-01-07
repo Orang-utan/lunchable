@@ -16,8 +16,8 @@ switch (process.env.NODE_ENV) {
     break;
   case "production":
     console.log("Environment is 'production'");
-    API_ENDPOINT = "https://pigeon-webapp.herokuapp.com";
-    WEB_ENDPOINT = "http://joinpigeon.me";
+    API_ENDPOINT = "https://lunchable-api.herokuapp.com";
+    WEB_ENDPOINT = "https://lunchable.netlify.app";
     AMPLITUDE_URL = "f1a3c4ad6492ae81eb9122abafd3dbf6";
     PROD = "production";
     break;
