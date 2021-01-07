@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../common/Colors";
 import { AuthContext } from "../context";
-
 import "../styles/color.css";
 import "../styles/layout.css";
 
@@ -15,7 +14,6 @@ const NavBarItems = styled.div`
 
 function Navbar() {
   const auth = useContext(AuthContext);
-  const history = useHistory();
 
   async function handleLogout() {
     await auth.logout();
