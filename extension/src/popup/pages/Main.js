@@ -4,6 +4,8 @@ import "../styles/layout.css";
 import "../styles/Main.css";
 import "../styles/typography.css";
 
+import Feedback from "./feedback.js";
+
 const EmojiPicker = () => {
   const randNum = (a, b) => {
     return Math.floor(Math.random() * (b - a) + a);
@@ -81,64 +83,66 @@ const Main = ({ pState, setPState }) => {
     chrome.tabs.create({ active: true, url });
   };
 
-  return (
-    <div className="popupContainer">
-      <div className="contentContainer">
-        <div className="top-container">
-          <div className="h1">
-            {pState.matchStatus === "rest"
-              ? `Ready to eat?`
-              : pState.matchStatus === "searching"
-              ? `Searching for friends ...`
-              : pState.matchStatus === "matched"
-              ? "Matched!"
-              : null}
-          </div>
-          <div className="body">
-            {pState.matchStatus === "rest"
-              ? `Match with your friends`
-              : pState.matchStatus === "searching"
-              ? `Hang on tight!`
-              : pState.matchStatus === "matched"
-              ? "Yay"
-              : null}
-          </div>
-          <br />
-          {pState.matchStatus === "rest" ? (
-            <div style={{ fontSize: "120px" }}>🤔</div>
-          ) : pState.matchStatus === "searching" ? (
-            <EmojiPicker />
-          ) : pState.matchStatus === "matched" ? (
-            <div style={{ fontSize: "120px" }}>😎</div>
-          ) : null}
+  return pState.matchStatus === "complete" ? (
+    <Feedback />
+  ) : (
+    <div className="contentContainer">
+      <div className="top-container">
+        <div className="h1">
+          {pState.matchStatus === "rest"
+            ? `Ready to eat?`
+            : pState.matchStatus === "searching"
+            ? `Searching for friends ...`
+            : pState.matchStatus === "matched"
+            ? "Matched!"
+            : null}
         </div>
+        <div className="body">
+          {pState.matchStatus === "rest"
+            ? `Match with your friends`
+            : pState.matchStatus === "searching"
+            ? `Hang on tight!`
+            : pState.matchStatus === "matched"
+            ? "Yay"
+            : null}
+        </div>
+        <br />
         {pState.matchStatus === "rest" ? (
+          <div style={{ fontSize: "120px" }}>🤔</div>
+        ) : pState.matchStatus === "searching" ? (
+          <EmojiPicker />
+        ) : pState.matchStatus === "matched" ? (
+          <div style={{ fontSize: "120px" }}>😎</div>
+        ) : null}
+      </div>
+      {pState.matchStatus === "rest" ? (
+        <button
+          className="fullstretchButton primary-button"
+          onClick={startSearch}
+        >
+          Join to eat
+        </button>
+      ) : pState.matchStatus === "searching" ? (
+        <button
+          className="fullstretchButton secondary-button"
+          onClick={cancelSearch}
+        >
+          Cancel
+        </button>
+      ) : pState.matchStatus === "matched" ? (
+        <React.Fragment>
           <button
             className="fullstretchButton primary-button"
-            onClick={startSearch}
+            onClick={joinCall}
           >
-            Join to eat
+            Join call →
           </button>
-        ) : pState.matchStatus === "searching" ? (
-          <button
-            className="fullstretchButton secondary-button"
-            onClick={cancelSearch}
-          >
-            Cancel
-          </button>
-        ) : pState.matchStatus === "matched" ? (
-          <>
-            <button
-              className="fullstretchButton primary-button"
-              onClick={joinCall}
-            >
-              Join call →
-            </button>
-            <button onClick={completeMatch}>Call Already Ended?</button>
-          </>
-        ) : null}
-        <button onClick={logout}>Logout</button>
-      </div>
+          <button onClick={completeMatch}>Call Already Ended?</button>
+        </React.Fragment>
+      ) : null}
+      <button onClick={logout} className="fullstretchButton secondary-button">
+        Logout
+      </button>
     </div>
   );
 };

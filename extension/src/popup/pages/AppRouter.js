@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Router } from "react-chrome-extension-router";
 import Login from "./Login";
 import Main from "./Main";
@@ -15,26 +15,31 @@ const AppRouter = () => {
     roomId: null,
   });
 
-  // hydrating popup state
-  chrome.runtime.sendMessage({ type: "popupInit" }, (res) => {
-    setLoading(false);
-    // TODO: handle error on UI
-    if (res.error) {
-      console.log(res.error);
-      return;
-    }
+  useEffect(() => {
+    chrome.runtime.sendMessage({ type: "popupInit" }, (res) => {
+      setLoading(false);
+      // TODO: handle error on UI
+      if (res.error) {
+        console.log(res.error);
+        return;
+      }
 
-    // set loading done
-    // only update if state differs
-    if (!_.isEqual(res.state, pState)) setPState(res.state);
-  });
+      // set loading done
+      // only update if state differs
+      if (!_.isEqual(res.state, pState)) setPState(res.state);
+      setPState({ ...res.state, matchStatus: "complete" });
+      console.log(pState);
+    });
+  }, []);
+
+  // hydrating popup state
 
   return (
     <Router>
       {loading ? (
         <LoadingSkeleton />
       ) : (
-        <div>
+        <div className="popupContainer">
           {pState.loggedIn ? (
             <Main setPState={setPState} pState={pState} />
           ) : (
