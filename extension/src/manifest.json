@@ -5,7 +5,7 @@
   "description": "Find friends over virtual lunches!",
   "content_scripts": [
     {
-      "matches": ["http://*.joinpigeon.me/*", "http://localhost:3000/*"],
+      "matches": ["https://lunchable.netlify.app/*", "http://localhost:3000/*"],
       "js": ["content.js"]
     }
   ],

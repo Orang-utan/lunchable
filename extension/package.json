@@ -1,8 +1,8 @@
 {
-  "name": "pigeon-extension",
+  "name": "lunchable-extension",
   "version": "0.1.0",
   "private": true,
-  "description": "Browser extension client for Pigeon",
+  "description": "Browser extension client for Lunchable",
   "scripts": {
     "start:chrome": "yarn chrome-launch",
     "start:firefox": "yarn firefox-launch",
@@ -15,7 +15,7 @@
     "chrome-launch": "node scripts/dev.js --browser=chrome",
     "firefox-launch": "node scripts/dev.js --browser=firefox"
   },
-  "author": "Pigeon",
+  "author": "Lunchable",
   "dependencies": {
     "@babel/core": "^7.12.9",
     "@babel/plugin-transform-async-to-generator": "^7.12.1",
