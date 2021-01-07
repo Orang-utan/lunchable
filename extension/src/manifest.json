@@ -1,8 +1,8 @@
 {
-  "version": "0.0.0.1",
+  "version": "0.0.1",
   "manifest_version": 2,
-  "name": "Pigeon",
-  "description": "Extension to make link sharing fun.",
+  "name": "Lunchable",
+  "description": "Find friends over virtual lunches!",
   "content_scripts": [
     {
       "matches": ["http://*.joinpigeon.me/*", "http://localhost:3000/*"],
