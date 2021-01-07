@@ -27,8 +27,10 @@ const AppRouter = () => {
       // set loading done
       // only update if state differs
       if (!_.isEqual(res.state, pState)) setPState(res.state);
-      setPState({ ...res.state, matchStatus: "complete" });
-      console.log(pState);
+
+      // for testing the complete page
+      // setPState({ ...res.state, matchStatus: "complete" });
+      // console.log(pState);
     });
   }, []);
 

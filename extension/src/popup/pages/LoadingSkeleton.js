@@ -14,12 +14,17 @@ const PopupContainer = styled.div`
 const LoadingSkeleton = () => {
   return (
     <PopupContainer>
-      <div>
-        <div className="rotate" style={{ fontSize: "53px" }}>
-          🍙
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div className="food-container">
+          <div className="food-emoji rotate">🍙</div>
         </div>
-        <br />
-        <div className="body">Loading</div>
+        <div className="body">Warming up food ..</div>
       </div>
     </PopupContainer>
   );
