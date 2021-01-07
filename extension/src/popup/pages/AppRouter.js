@@ -18,13 +18,14 @@ const AppRouter = () => {
 
   // hydrating popup state
   chrome.runtime.sendMessage({ type: "popupInit" }, (res) => {
-    if (res.error) return;
+    if (res.error) {
+      // TODO: handle error on UI
+      return;
+    }
 
     // set loading done
     // only update if state differs
-    if (!_.isEqual(res.state, pState)) {
-      setPState(res.state);
-    }
+    if (!_.isEqual(res.state, pState)) setPState(res.state);
     setLoading(false);
   });
 
