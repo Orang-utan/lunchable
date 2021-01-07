@@ -4,21 +4,33 @@ import "../styles/layout.css";
 import "../styles/Main.css";
 import "../styles/typography.css";
 
-const randNum = (a, b) => {
-  return Math.floor(Math.random() * (b - a) + a);
+const EmojiPicker = () => {
+  const randNum = (a, b) => {
+    return Math.floor(Math.random() * (b - a) + a);
+  };
+  let num = randNum(0, 3);
+  return (
+    <div className="food-container">
+      <div className="food-emoji rotate">
+        {num === 0 ? "🍕" : num === 1 ? "🍔" : num === 2 ? "🌮" : "🍆"}
+      </div>
+    </div>
+  );
 };
 
 const Main = ({ pState, setPState }) => {
-  const EmojiPicker = () => {
-    let num = randNum(0, 3);
-    return (
-      <div className="food-container">
-        <div className="food-emoji rotate">
-          {num === 0 ? "🍕" : num === 1 ? "🍔" : num === 2 ? "🌮" : "🍆"}
-        </div>
-      </div>
-    );
-  };
+  // listener for match found
+  chrome.runtime.onMessage.addListener((msg, _, __) => {
+    switch (msg.type) {
+      case "matchFound":
+        console.log("hello");
+        setPState(msg.state);
+        break;
+
+      default:
+        break;
+    }
+  });
 
   const logout = () => {
     chrome.runtime.sendMessage({ type: "logout" }, (res) => {

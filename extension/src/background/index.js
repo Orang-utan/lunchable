@@ -16,6 +16,14 @@ import {
   setTokens,
 } from "../services/storageClient";
 
+/** background state, similar to redux */
+let state = {
+  matchStatus: "rest",
+  loggedIn: false,
+  roomUrl: null,
+  roomId: null,
+};
+
 /** socket stuff below  */
 let socket = io.connect(API_ENDPOINT);
 let uid = null;
@@ -62,7 +70,7 @@ function unbindSocketToUID() {
 /** interval fetching logic */
 let statusInterval = null;
 let isFetching = false;
-function setIntervalAndExecute(fn, t) {
+function dispatchWorker(fn, t) {
   fn();
   return setInterval(fn, t);
 }
@@ -87,23 +95,19 @@ function fetchStatus(roomId) {
         console.log(data);
         if (data.fulfilled) {
           console.log("success!");
+          state.roomUrl = data.roomUrl;
+          state.matchStatus = "matched";
+          chrome.runtime.sendMessage({ type: "matchFound", state });
           clearInterval(statusInterval);
+          statusInterval = null;
         }
       })
       .catch((err) => console.error(err));
   });
 }
 
-/** background state, similar to redux */
-let state = {
-  matchStatus: "rest",
-  loggedIn: false,
-  roomUrl: null,
-  roomId: null,
-};
-
 /** background script message passing core logic */
-chrome.runtime.onMessage.addListener((msg, sender, response) => {
+chrome.runtime.onMessage.addListener((msg, _, response) => {
   switch (msg.type) {
     case "findMatch":
       getAccessToken()
@@ -119,7 +123,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
             } else {
               // TODO: run get status asynchronously
               if (!statusInterval) {
-                statusInterval = setIntervalAndExecute(
+                statusInterval = dispatchWorker(
                   () => fetchStatus(roomId),
                   1000
                 );
