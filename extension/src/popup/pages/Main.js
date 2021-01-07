@@ -26,7 +26,6 @@ const Main = ({ pState, setPState }) => {
         console.log("hello");
         setPState(msg.state);
         break;
-
       default:
         break;
     }
