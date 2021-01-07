@@ -1,15 +1,8 @@
-import { useEffect, useState } from "react";
-import { sendAmplitudeData } from "../util/amplitude";
-
-import { goTo } from "react-chrome-extension-router";
-import { FaSearch } from "react-icons/fa";
-import { IconContext } from "react-icons";
-
-import "../styles/typography.css";
+import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
-import "../styles/animation.css";
 import "../styles/Main.css";
+import "../styles/typography.css";
 
 const randNum = (a, b) => {
   return Math.floor(Math.random() * (b - a) + a);
@@ -33,7 +26,7 @@ const Main = ({ pState, setPState }) => {
         // TODO: handle error
         return;
       }
-      setPState(res.state);
+      if (!_.isEqual(res.state, pState)) setPState(res.state);
     });
   };
 

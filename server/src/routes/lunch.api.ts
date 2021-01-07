@@ -121,6 +121,11 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
   if (user.matchStatus === 'matched')
     return errorHandler(res, 'Unable to cancel: user matched already.');
 
+  // reset anyways
+  user.matchStatus = 'rest';
+  user.roomId = null;
+  await user.save();
+
   const roomId = req.params.roomId;
   if (!roomId) return errorHandler(res, 'No Room ID provided.');
 

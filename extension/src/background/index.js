@@ -1,4 +1,5 @@
 import axios from "axios";
+import secureAxios from "../services/api";
 import io from "socket.io-client";
 import {
   fetchMe,
@@ -60,10 +61,37 @@ function unbindSocketToUID() {
 
 /** interval fetching logic */
 let statusInterval = null;
-let matched = false;
+let isFetching = false;
 function setIntervalAndExecute(fn, t) {
   fn();
   return setInterval(fn, t);
+}
+
+function fetchStatus(roomId) {
+  if (isFetching) return;
+  // TODO: add expire timeout
+
+  isFetching = true;
+  getAccessToken().then((accessToken) => {
+    secureAxios({
+      url: `/api/lunches/status/${roomId}`,
+      method: "GET",
+      timeout: 0,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        const data = res.data;
+        isFetching = false;
+        console.log(data);
+        if (data.fulfilled) {
+          console.log("success!");
+          clearInterval(statusInterval);
+        }
+      })
+      .catch((err) => console.error(err));
+  });
 }
 
 /** background state, similar to redux */
@@ -92,7 +120,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
               // TODO: run get status asynchronously
               if (!statusInterval) {
                 statusInterval = setIntervalAndExecute(
-                  () => console.log("hello"),
+                  () => fetchStatus(roomId),
                   1000
                 );
               }
@@ -174,7 +202,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       setTokens("", "")
         .then(() => {
           // clean up
-          matched = false;
           unbindSocketToUID();
           clearInterval(statusInterval);
           statusInterval = null;
