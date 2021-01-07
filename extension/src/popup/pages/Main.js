@@ -130,7 +130,7 @@ const Main = ({ pState, setPState }) => {
           Cancel
         </button>
       ) : pState.matchStatus === "matched" ? (
-        <React.Fragment>
+        <div>
           <button
             className="fullstretchButton primary-button"
             onClick={joinCall}
@@ -138,7 +138,7 @@ const Main = ({ pState, setPState }) => {
             Join call →
           </button>
           <button onClick={completeMatch}>Call Already Ended?</button>
-        </React.Fragment>
+        </div>
       ) : null}
       <button onClick={logout} className="fullstretchButton secondary-button">
         Logout
