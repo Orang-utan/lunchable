@@ -30,7 +30,7 @@ const Main = ({ pState, setPState }) => {
   const logout = () => {
     chrome.runtime.sendMessage({ type: "logout" }, (res) => {
       if (res.error) {
-        console.log("Error");
+        // TODO: handle error
         return;
       }
       setPState(res.state);
@@ -38,24 +38,38 @@ const Main = ({ pState, setPState }) => {
   };
 
   const startSearch = () => {
-    setPState({ ...pState, matchStatus: "searching" });
-    chrome.runtime.sendMessage({ type: "findMatch" }, (state) => {
-      setPState({ ...pState, matchStatus: state.matchStatus });
+    chrome.runtime.sendMessage({ type: "findMatch" }, (res) => {
+      if (res.error) {
+        // TODO: handle error
+        return;
+      }
+      if (!_.isEqual(res.state, pState)) setPState(res.state);
     });
   };
 
   const cancelSearch = () => {
-    setPState({ ...pState, matchStatus: "rest" });
-    chrome.runtime.sendMessage({ type: "cancelMatch" }, (response) => {});
+    chrome.runtime.sendMessage({ type: "cancelMatch" }, (res) => {
+      if (res.error) {
+        // TODO: handle error
+        return;
+      }
+      if (!_.isEqual(res.state, pState)) setPState(res.state);
+    });
   };
 
-  const endCall = () => {
-    setPState({ ...pState, matchStatus: "rest" });
-    chrome.runtime.sendMessage({ type: "endCall" });
+  const completeMatch = () => {
+    chrome.runtime.sendMessage({ type: "completeMatch" }, (res) => {
+      if (res.error) {
+        // TODO: handle error
+        return;
+      }
+      if (!_.isEqual(res.state, pState)) setPState(res.state);
+    });
   };
 
   const joinCall = () => {
     console.log("Joining call");
+    console.log(pState);
     openURL(pState.roomUrl);
   };
 
@@ -116,7 +130,7 @@ const Main = ({ pState, setPState }) => {
             >
               Join call →
             </button>
-            <button onClick={endCall}>Call Already Ended?</button>
+            <button onClick={completeMatch}>Call Already Ended?</button>
           </>
         ) : null}
         <button onClick={logout}>Logout</button>

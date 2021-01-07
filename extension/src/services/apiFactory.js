@@ -70,4 +70,20 @@ function cancelLunch(ACCESS_TOKEN, roomId) {
   });
 }
 
-export { login, fetchMe, findLunch, cancelLunch };
+function completeLunch(ACCESS_TOKEN, roomId) {
+  return new Promise((resolve, reject) => {
+    secureAxios({
+      url: `/api/lunches/complete/${roomId}`,
+      method: "POST",
+      timeout: 0,
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => resolve(res.data))
+      .catch((err) => reject(err));
+  });
+}
+
+export { login, fetchMe, findLunch, cancelLunch, completeLunch };

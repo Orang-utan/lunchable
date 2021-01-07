@@ -1,6 +1,11 @@
 import axios from "axios";
 import io from "socket.io-client";
-import { fetchMe, findLunch, cancelLunch } from "../services/apiFactory";
+import {
+  fetchMe,
+  findLunch,
+  cancelLunch,
+  completeLunch,
+} from "../services/apiFactory";
 import { API_ENDPOINT } from "../services/config";
 import {
   getAccessToken,
@@ -73,38 +78,56 @@ let state = {
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   switch (msg.type) {
     case "findMatch":
-      getAccessToken().then((accessToken) => {
-        findLunch(accessToken, 2).then((res) => {
-          const { roomUrl, message, roomId } = res;
-          if (roomUrl) {
-            // update state
-            state.matchStatus = "matched";
-            state.roomUrl = roomUrl;
-            state.roomId = roomId;
-            response(state);
-          } else {
-            // run get status asynchronously
-            if (!statusInterval) {
-              statusInterval = setIntervalAndExecute(
-                () => console.log("hello"),
-                1000
-              );
+      getAccessToken()
+        .then((accessToken) => {
+          findLunch(accessToken, 2).then((res) => {
+            const { roomUrl, roomId } = res;
+            if (roomUrl) {
+              // update state
+              state.matchStatus = "matched";
+              state.roomUrl = roomUrl;
+              state.roomId = roomId;
+              response({ state });
+            } else {
+              // TODO: run get status asynchronously
+              if (!statusInterval) {
+                statusInterval = setIntervalAndExecute(
+                  () => console.log("hello"),
+                  1000
+                );
+              }
+              state.matchStatus = "searching";
+              state.roomUrl = null;
+              state.roomId = roomId;
+              response({ state });
             }
-            state.matchStatus = "searching";
-            state.roomId = roomId;
-            response(state);
-          }
-        });
-      });
+          });
+        })
+        .catch((error) => response({ state, error }));
       break;
     case "cancelMatch":
-      clearInterval(statusInterval);
-      statusInterval = null;
-
+      getAccessToken().then((accessToken) => {
+        cancelLunch(accessToken, state.roomId)
+          .then(() => {
+            state.matchStatus = "rest";
+            state.roomId = null;
+            state.roomUrl = null;
+            response({ state });
+          })
+          .catch((error) => response({ state, error }));
+      });
       break;
-    case "endCall":
-      // TODO: need some API endpoint here
-      matched = false;
+    case "completeMatch":
+      getAccessToken().then((accessToken) => {
+        completeLunch(accessToken, state.roomId)
+          .then(() => {
+            state.matchStatus = "rest";
+            state.roomId = null;
+            state.roomUrl = null;
+            response({ state });
+          })
+          .catch((error) => response({ state, error }));
+      });
       break;
     case "popupInit":
       getRefreshToken()

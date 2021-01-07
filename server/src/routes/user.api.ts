@@ -110,8 +110,9 @@ router.get('/me', auth, (req, res) => {
     .then((user: any) => {
       if (!user) return errorHandler(res, 'User does not exist.');
       const roomUrl = `${CLIENT_URL}/rooms/${user.roomId}`;
-      user.roomUrl = roomUrl;
-      return res.status(200).json({ success: true, data: user });
+      return res
+        .status(200)
+        .json({ success: true, data: { roomUrl, ...user._doc } });
     })
     .catch((err: Error) => errorHandler(res, err.message));
 });

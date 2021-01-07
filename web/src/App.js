@@ -52,7 +52,7 @@ function App() {
                 <PublicRoute exact path="/" component={IndexPage} />
                 <PublicRoute exact path="/login" component={LoginPage} />
                 <PublicRoute exact path="/register" component={RegisterPage} />
-                <PrivateRoute exact path="/room/:id" component={RoomPage} />
+                <PrivateRoute exact path="/rooms/:id" component={RoomPage} />
                 <PrivateRoute
                   exact
                   path="/dashboard"
