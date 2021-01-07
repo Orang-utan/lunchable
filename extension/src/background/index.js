@@ -175,6 +175,8 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
                   chrome.browserAction.setBadgeText({ text: "" })
                 );
 
+                localStorage.setItem("Initialized", 1);
+
                 const { matchStatus, roomId, roomUrl } = user;
                 state.matchStatus = matchStatus;
                 state.roomId = roomId;
@@ -219,6 +221,10 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
           response({ state });
         })
         .catch((error) => response({ state, error }));
+      break;
+    case "checkLoggedIn":
+      console.log(state.loggedIn);
+      response(state);
       break;
     default:
       response({ success: false, error: "Unknown request" });
