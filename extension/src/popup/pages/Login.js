@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { LOGIN_URL, SIGNUP_URL } from "../../services/config";
 
 const LoginContainer = styled.div`
-  background-color: #3498db;
   text-align: left;
   width: 310px;
   max-height: 290px;
@@ -19,7 +18,6 @@ const Headline = styled.p`
   font-size: 20px;
   font-family: "Avenir";
   font-weight: 600;
-  color: white;
   margin: 0px;
 `;
 
@@ -49,7 +47,6 @@ const Paragraph = styled.div`
   font-size: 12px;
   font-family: "Avenir";
   font-weight: 400;
-  color: white;
   margin: 10px 0px 15px 0px;
 `;
 
@@ -103,10 +100,7 @@ const LoginButton = styled.button`
   }
 `;
 
-const Login = ({ setLoggedIn }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+const Login = () => {
   const openURL = (url) => {
     chrome.tabs.create({ active: true, url });
   };

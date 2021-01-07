@@ -53,6 +53,7 @@ router.post('/find', auth, async (req, res) => {
       const participant = await User.findById(pid);
       if (!participant) continue;
       participant.matchStatus = 'matched';
+      participant.roomId = roomToJoin.id;
       await participant.save();
     }
 
@@ -73,6 +74,7 @@ router.post('/find', auth, async (req, res) => {
   await newRoom.save();
 
   user.matchStatus = 'searching';
+  user.roomId = newRoom.id;
   await user.save();
 
   return res.status(200).json({
@@ -131,11 +133,12 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
       .json({ message: 'Unable to cancel: lunch already happened.' });
 
   // defensively update everyone's status
-  for (const uid of room.participants) {
-    const targetUser = await User.findById(uid);
-    if (!targetUser) continue;
-    targetUser.matchStatus = 'rest';
-    await targetUser.save();
+  for (const pid of room.participants) {
+    const participant = await User.findById(pid);
+    if (!participant) continue;
+    participant.roomId = null;
+    participant.matchStatus = 'rest';
+    await participant.save();
   }
 
   if (room.creatorId === userId) {
@@ -162,6 +165,7 @@ router.post('/complete/:roomId', auth, async (req, res) => {
 
   // reset anyways
   user.matchStatus = 'rest';
+  user.roomId = null;
   await user.save();
 
   const roomId = req.params.roomId;
@@ -173,6 +177,7 @@ router.post('/complete/:roomId', auth, async (req, res) => {
   } catch (err) {
     return errorHandler(res, 'Invalid Room ID. User status was reset.');
   }
+
   if (!room)
     return errorHandler(res, 'Invalid Room ID. User status was reset.');
 
@@ -185,6 +190,7 @@ router.post('/complete/:roomId', auth, async (req, res) => {
     if (!participant) continue;
     participant.pastLunches.push(roomId);
     participant.matchStatus = 'rest';
+    participant.roomId = null;
     await participant.save();
   }
 

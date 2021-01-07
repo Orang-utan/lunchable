@@ -12,6 +12,7 @@ interface IUser extends mongoose.Document {
   groupBelongedTo: string[];
   pastLunches: string[];
   matchStatus: string; // rest | searching | matched
+  roomId: string; // current room id
 }
 
 const UserSchema = new Schema({
@@ -23,6 +24,7 @@ const UserSchema = new Schema({
   groupBelongedTo: { type: [String], required: true, default: [] },
   pastLunches: { type: [String], required: true, default: [] },
   matchStatus: { type: String, default: 'rest' },
+  roomId: { type: String, default: null },
 });
 
 const User = mongoose.model<IUser>('User', UserSchema);

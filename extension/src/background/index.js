@@ -65,6 +65,8 @@ function setIntervalAndExecute(fn, t) {
 let state = {
   matchStatus: "rest",
   loggedIn: false,
+  roomUrl: null,
+  roomId: null,
 };
 
 /** background script message passing core logic */
@@ -75,16 +77,22 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
         findLunch(accessToken, 2).then((res) => {
           const { roomUrl, message, roomId } = res;
           if (roomUrl) {
-            matched = true;
-            response({ roomUrl, message, status: "matched" });
+            // update state
+            state.matchStatus = "matched";
+            state.roomUrl = roomUrl;
+            state.roomId = roomId;
+            response(state);
           } else {
+            // run get status asynchronously
             if (!statusInterval) {
               statusInterval = setIntervalAndExecute(
                 () => console.log("hello"),
                 1000
               );
             }
-            response({ roomId, message, status: "searching" });
+            state.matchStatus = "searching";
+            state.roomId = roomId;
+            response(state);
           }
         });
       });
@@ -107,13 +115,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
           setNotifyCount(0, () => {
             chrome.browserAction.setBadgeText({ text: "" });
             getAccessToken().then((accessToken) => {
-              // initialize state
+              // initialize user state
               fetchMe(accessToken)
                 .then((user) => {
-                  const { matchStatus } = user;
+                  const { matchStatus, roomId } = user;
                   state.matchStatus = matchStatus;
+                  state.roomId = roomId;
                   state.loggedIn = true;
-                  console.log(state);
                   response(state);
                 })
                 .catch((error) => response(state, error));

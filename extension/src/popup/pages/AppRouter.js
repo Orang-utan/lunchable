@@ -5,15 +5,21 @@ import Main from "./Main";
 import LoadingSkeleton from "./LoadingSkeleton";
 
 const AppRouter = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [searchState, setSearchState] = useState("rest");
 
-  // initialize ui state
+  // popup state
+  const [pState, setPState] = useState({
+    matchStatus: "rest",
+    loggedIn: false,
+    roomUrl: null,
+    roomId: null,
+  });
+
+  // hydrating popup state
   chrome.runtime.sendMessage({ type: "popupInit" }, (state) => {
     if (state) {
-      setLoggedIn(state.loggedIn);
-      setSearchState(state.matchStatus);
+      // set popup state from background state
+      setPState(state);
     }
     // set loading done
     setLoading(false);
@@ -25,14 +31,10 @@ const AppRouter = () => {
         <LoadingSkeleton />
       ) : (
         <div>
-          {loggedIn ? (
-            <Main
-              setLoggedIn={setLoggedIn}
-              searchState={searchState}
-              setSearchState={setSearchState}
-            />
+          {pState.loggedIn ? (
+            <Main setPState={setPState} pState={pState} />
           ) : (
-            <Login setLoggedIn={setLoggedIn} />
+            <Login setPState={setPState} />
           )}
         </div>
       )}

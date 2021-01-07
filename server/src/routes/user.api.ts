@@ -105,7 +105,7 @@ router.get('/me', auth, (req, res) => {
   const { userId } = req;
 
   return User.findById(userId)
-    .select('firstName lastName email _id matchStatus')
+    .select('firstName lastName email _id matchStatus roomId')
     .then((user: any) => {
       if (!user) return errorHandler(res, 'User does not exist.');
 

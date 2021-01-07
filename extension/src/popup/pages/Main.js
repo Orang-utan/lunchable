@@ -15,8 +15,7 @@ const randNum = (a, b) => {
   return Math.floor(Math.random() * (b - a) + a);
 };
 
-const Main = ({ setLoggedIn, searchState, setSearchState }) => {
-  console.log(searchState);
+const Main = ({ pState, setPState }) => {
   const EmojiPicker = () => {
     let num = randNum(0, 3);
     return (
@@ -31,7 +30,7 @@ const Main = ({ setLoggedIn, searchState, setSearchState }) => {
   const logout = () => {
     chrome.runtime.sendMessage({ type: "logout" }, (response) => {
       if (response && response.success) {
-        setLoggedIn(false);
+        setPState({ ...pState, loggedIn: false });
         return;
       }
       console.log("Error");
@@ -39,19 +38,20 @@ const Main = ({ setLoggedIn, searchState, setSearchState }) => {
   };
 
   const startSearch = () => {
-    setSearchState("searching");
-    chrome.runtime.sendMessage({ type: "findMatch" }, (response) => {
-      setSearchState(response.status);
+    setPState({ ...pState, matchStatus: "searching" });
+    chrome.runtime.sendMessage({ type: "findMatch" }, (state) => {
+      setPState({ ...pState, matchStatus: state.matchStatus });
+      console.log(state);
     });
   };
 
   const cancelSearch = () => {
-    setSearchState("rest");
+    setPState({ ...pState, matchStatus: "rest" });
     chrome.runtime.sendMessage({ type: "cancelMatch" }, (response) => {});
   };
 
   const endCall = () => {
-    setSearchState("rest");
+    setPState({ ...pState, matchStatus: "rest" });
     chrome.runtime.sendMessage({ type: "endCall" });
   };
 
@@ -64,47 +64,47 @@ const Main = ({ setLoggedIn, searchState, setSearchState }) => {
       <div className="contentContainer">
         <div className="top-container">
           <div className="h1">
-            {searchState === "rest"
+            {pState.matchStatus === "rest"
               ? `Ready to eat?`
-              : searchState === "searching"
+              : pState.matchStatus === "searching"
               ? `Searching for friends ...`
-              : searchState === "matched"
+              : pState.matchStatus === "matched"
               ? "Matched!"
               : null}
           </div>
           <div className="body">
-            {searchState === "rest"
+            {pState.matchStatus === "rest"
               ? `Match with your friends`
-              : searchState === "searching"
+              : pState.matchStatus === "searching"
               ? `Hang on tight!`
-              : searchState === "matched"
+              : pState.matchStatus === "matched"
               ? "Yay"
               : null}
           </div>
           <br />
-          {searchState === "rest" ? (
+          {pState.matchStatus === "rest" ? (
             <div style={{ fontSize: "120px" }}>🤔</div>
-          ) : searchState === "searching" ? (
+          ) : pState.matchStatus === "searching" ? (
             <EmojiPicker />
-          ) : searchState === "matched" ? (
+          ) : pState.matchStatus === "matched" ? (
             <div style={{ fontSize: "120px" }}>😎</div>
           ) : null}
         </div>
-        {searchState === "rest" ? (
+        {pState.matchStatus === "rest" ? (
           <button
             className="fullstretchButton primary-button"
             onClick={startSearch}
           >
             Join to eat
           </button>
-        ) : searchState === "searching" ? (
+        ) : pState.matchStatus === "searching" ? (
           <button
             className="fullstretchButton secondary-button"
             onClick={cancelSearch}
           >
             Cancel
           </button>
-        ) : searchState === "matched" ? (
+        ) : pState.matchStatus === "matched" ? (
           <>
             <button
               className="fullstretchButton primary-button"
