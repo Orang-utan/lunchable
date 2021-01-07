@@ -8,6 +8,7 @@ import {
   generateRefreshToken,
   validateRefreshToken,
 } from './user.util';
+import { CLIENT_URL } from '../utils/config';
 
 const router = express.Router();
 const saltRounds = 10;
@@ -108,7 +109,8 @@ router.get('/me', auth, (req, res) => {
     .select('firstName lastName email _id matchStatus roomId')
     .then((user: any) => {
       if (!user) return errorHandler(res, 'User does not exist.');
-
+      const roomUrl = `${CLIENT_URL}/rooms/${user.roomId}`;
+      user.roomUrl = roomUrl;
       return res.status(200).json({ success: true, data: user });
     })
     .catch((err: Error) => errorHandler(res, err.message));
