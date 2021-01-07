@@ -36,7 +36,13 @@ const Room = (props) => {
 
   useEffect(() => {
     // TODO: change this
-    socketRef.current = io.connect("http://localhost:5000/");
+    let CLIENT_URL;
+    if (process.env.NODE_ENV === "production") {
+      CLIENT_URL = "https://lunchable-api.herokuapp.com/";
+    } else {
+      CLIENT_URL = "http://localhost:5000/";
+    }
+    socketRef.current = io.connect(CLIENT_URL);
     navigator.mediaDevices
       .getUserMedia({ video: videoConstraints, audio: true })
       .then((stream) => {
