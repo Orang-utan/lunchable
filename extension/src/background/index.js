@@ -109,23 +109,25 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     case "popupInit":
       getRefreshToken()
         .then(() => {
-          // bind socket
-          bindSocketToUID();
-          // clear notification
-          setNotifyCount(0, () => {
-            chrome.browserAction.setBadgeText({ text: "" });
-            getAccessToken().then((accessToken) => {
-              // initialize user state
-              fetchMe(accessToken)
-                .then((user) => {
-                  const { matchStatus, roomId } = user;
-                  state.matchStatus = matchStatus;
-                  state.roomId = roomId;
-                  state.loggedIn = true;
-                  response(state);
-                })
-                .catch((error) => response(state, error));
-            });
+          getAccessToken().then((accessToken) => {
+            // initialize user state
+            fetchMe(accessToken)
+              .then((user) => {
+                // bind socket
+                bindSocketToUID();
+                // clear notification
+                setNotifyCount(0, () =>
+                  chrome.browserAction.setBadgeText({ text: "" })
+                );
+
+                const { matchStatus, roomId, roomUrl } = user;
+                state.matchStatus = matchStatus;
+                state.roomId = roomId;
+                state.roomUrl = roomUrl;
+                state.loggedIn = true;
+                response({ state });
+              })
+              .catch((error) => response({ state, error }));
           });
         })
         .catch((error) => response({ state, error }));
@@ -157,9 +159,16 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
           unbindSocketToUID();
           clearInterval(statusInterval);
           statusInterval = null;
-          response({ success: true });
+          // reset background state
+          state = {
+            matchStatus: "rest",
+            loggedIn: false,
+            roomUrl: null,
+            roomId: null,
+          };
+          response({ state });
         })
-        .catch((err) => response({ success: false, error: err }));
+        .catch((error) => response({ state, error }));
       break;
     default:
       response({ success: false, error: "Unknown request" });

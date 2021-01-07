@@ -28,12 +28,12 @@ const Main = ({ pState, setPState }) => {
   };
 
   const logout = () => {
-    chrome.runtime.sendMessage({ type: "logout" }, (response) => {
-      if (response && response.success) {
-        setPState({ ...pState, loggedIn: false });
+    chrome.runtime.sendMessage({ type: "logout" }, (res) => {
+      if (res.error) {
+        console.log("Error");
         return;
       }
-      console.log("Error");
+      setPState(res.state);
     });
   };
 
@@ -41,7 +41,6 @@ const Main = ({ pState, setPState }) => {
     setPState({ ...pState, matchStatus: "searching" });
     chrome.runtime.sendMessage({ type: "findMatch" }, (state) => {
       setPState({ ...pState, matchStatus: state.matchStatus });
-      console.log(state);
     });
   };
 
@@ -57,6 +56,11 @@ const Main = ({ pState, setPState }) => {
 
   const joinCall = () => {
     console.log("Joining call");
+    openURL(pState.roomUrl);
+  };
+
+  const openURL = (url) => {
+    chrome.tabs.create({ active: true, url });
   };
 
   return (
