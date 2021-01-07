@@ -3,6 +3,7 @@ let WEB_ENDPOINT;
 let SIGNUP_URL;
 let LOGIN_URL;
 let AMPLITUDE_URL;
+let PROD;
 
 switch (process.env.NODE_ENV) {
   case "development":
@@ -10,6 +11,7 @@ switch (process.env.NODE_ENV) {
     API_ENDPOINT = "http://localhost:5000";
     WEB_ENDPOINT = "http://localhost:3000";
     AMPLITUDE_URL = "f1a3c4ad6492ae81eb9122abafd3dbf6";
+    PROD = "development";
 
     break;
   case "production":
@@ -17,6 +19,7 @@ switch (process.env.NODE_ENV) {
     API_ENDPOINT = "https://pigeon-webapp.herokuapp.com";
     WEB_ENDPOINT = "http://joinpigeon.me";
     AMPLITUDE_URL = "f1a3c4ad6492ae81eb9122abafd3dbf6";
+    PROD = "production";
     break;
   default:
     throw new Error(`'NODE_ENV' ${process.env.NODE_ENV} is not handled!`);
@@ -25,4 +28,4 @@ switch (process.env.NODE_ENV) {
 SIGNUP_URL = `${WEB_ENDPOINT}/register`;
 LOGIN_URL = `${WEB_ENDPOINT}/login`;
 
-export { API_ENDPOINT, SIGNUP_URL, LOGIN_URL, AMPLITUDE_URL };
+export { API_ENDPOINT, SIGNUP_URL, LOGIN_URL, AMPLITUDE_URL, PROD };
