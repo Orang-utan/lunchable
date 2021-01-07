@@ -2,15 +2,25 @@ import styled from "styled-components";
 
 const PopupContainer = styled.div`
   text-align: left;
-  width: 310px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   overflow: scroll;
+  display: flex;
+  flex-diction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const LoadingSkeleton = () => {
   return (
     <PopupContainer>
-      <h1>Loading...</h1>
+      <div>
+        <div className="rotate" style={{ fontSize: "53px" }}>
+          🍙
+        </div>
+        <br />
+        <div className="body">Loading</div>
+      </div>
     </PopupContainer>
   );
 };

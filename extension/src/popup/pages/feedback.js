@@ -4,16 +4,18 @@ import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
 
-import star1 from "../../img/star1.svg";
-import star2 from "../../img/star2.svg";
+import Star1 from "../../img/star1.svg";
+import Star2 from "../../img/star2.svg";
 
-const Feedback = () => {
+const Feedback = ({ pState, setPState }) => {
   const [stars, setStars] = useState(1);
   const [feedback, setFeedback] = useState("");
 
-  const selectStar = (idx) => {
-    console.log("Setting star");
-    setStars(idx + 1);
+  const submitFeedback = () => {
+    let feedbackObj = { stars, feedback };
+
+    // API Call here plz
+    setPState({ ...pState, matchStatus: "rest" });
   };
 
   return (
@@ -23,11 +25,12 @@ const Feedback = () => {
         <div className="flex-row">
           {[...Array(5)].map((star, idx) => {
             return (
-              <img
-                src={idx + 1 > stars ? star2 : star1}
+              <div
                 style={{ margin: "3px", cursor: "pointer" }}
                 onClick={() => setStars(idx + 1)}
-              />
+              >
+                {idx > stars - 1 ? <img src={Star2} /> : <img src={Star1} />}
+              </div>
             );
           })}
         </div>
@@ -39,7 +42,10 @@ const Feedback = () => {
           onChange={(e) => setFeedback(e.target.value)}
         />
       </div>
-      <button className="fullstretchButton primary-button">
+      <button
+        className="fullstretchButton primary-button"
+        onClick={submitFeedback}
+      >
         Submit and complete
       </button>
     </div>
