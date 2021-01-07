@@ -61,6 +61,12 @@ function setIntervalAndExecute(fn, t) {
   return setInterval(fn, t);
 }
 
+/** background state, similar to redux */
+let state = {
+  matchStatus: "rest",
+  loggedIn: false,
+};
+
 /** background script message passing core logic */
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   switch (msg.type) {
@@ -95,17 +101,26 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     case "popupInit":
       getRefreshToken()
         .then(() => {
+          // bind socket
           bindSocketToUID();
           // clear notification
           setNotifyCount(0, () => {
             chrome.browserAction.setBadgeText({ text: "" });
-            const searching = statusInterval ? true : false;
-            response({ success: true, searching, matched });
+            getAccessToken().then((accessToken) => {
+              // initialize state
+              fetchMe(accessToken)
+                .then((user) => {
+                  const { matchStatus } = user;
+                  state.matchStatus = matchStatus;
+                  state.loggedIn = true;
+                  console.log(state);
+                  response(state);
+                })
+                .catch((error) => response(state, error));
+            });
           });
         })
-        .catch((err) => {
-          response({ success: false, error: err });
-        });
+        .catch((error) => response({ state, error }));
       break;
     case "login":
       const { newRefreshToken } = msg.payload;

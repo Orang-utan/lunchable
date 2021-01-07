@@ -8,7 +8,11 @@ const PopupContainer = styled.div`
 `;
 
 const LoadingSkeleton = () => {
-  return <PopupContainer></PopupContainer>;
+  return (
+    <PopupContainer>
+      <h1>Loading...</h1>
+    </PopupContainer>
+  );
 };
 
 export default LoadingSkeleton;

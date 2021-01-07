@@ -16,6 +16,7 @@ const randNum = (a, b) => {
 };
 
 const Main = ({ setLoggedIn, searchState, setSearchState }) => {
+  console.log(searchState);
   const EmojiPicker = () => {
     let num = randNum(0, 3);
     return (
