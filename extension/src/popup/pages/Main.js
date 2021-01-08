@@ -4,7 +4,7 @@ import "../styles/layout.css";
 import "../styles/Main.css";
 import "../styles/typography.css";
 
-import Feedback from "./feedback.js";
+import Feedback from "./Feedback.js";
 
 const EmojiPicker = () => {
   const randNum = (a, b) => {
