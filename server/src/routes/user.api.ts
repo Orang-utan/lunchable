@@ -18,7 +18,6 @@ router.post('/signup', async (req, res) => {
   const { firstName } = req.body;
   const { lastName } = req.body;
   const { email } = req.body;
-  const { company } = req.body;
   const { password } = req.body;
 
   if (await User.findOne({ email })) {
@@ -35,7 +34,6 @@ router.post('/signup', async (req, res) => {
       firstName,
       lastName,
       email,
-      institutionName: company,
       password: hashedPassword,
     });
 
