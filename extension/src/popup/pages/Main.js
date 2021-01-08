@@ -25,7 +25,6 @@ const Main = ({ pState, setPState }) => {
   chrome.runtime.onMessage.addListener((msg, _, __) => {
     switch (msg.type) {
       case "matchFound":
-        console.log("hello");
         setPState(msg.state);
         break;
       default:

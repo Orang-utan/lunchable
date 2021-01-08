@@ -1,10 +1,7 @@
-import { useState } from "react";
 import styled from "styled-components";
-
 import { LOGIN_URL, SIGNUP_URL } from "../../services/config";
 
 const LoginContainer = styled.div`
-  background-color: #3498db;
   text-align: left;
   width: 310px;
   max-height: 290px;
