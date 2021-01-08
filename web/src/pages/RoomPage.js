@@ -1,22 +1,33 @@
 import React from "react";
+import VideoCallFrame from "../components/VideoCallFrame";
+import styled from "styled-components";
 
-const RoomPage = () => {
-  // Create the DailyIframe, passing styling properties to make it fullscreen
-  window.callFrame = window.DailyIframe.createFrame({
-    iframeStyle: {
-      position: "fixed",
-      border: 0,
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-    },
-  });
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  width: 100vw;
+`;
+
+const VideoCall = styled(VideoCallFrame)`
+  margin: 50px;
+`;
+
+const RoomPage = (props) => {
+  const roomID = props.match.params.roomID;
+
+  console.log(roomID);
+
+  // see if room id exists in daily.co
+  // if not create a room, else return the room id
 
   return (
-    <>
-      <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
-    </>
+    <Container>
+      <h1 className="title is-h1">Meet your lunch date!</h1>
+      <VideoCall url={`https://lunchable.daily.co/${roomID}`} />
+    </Container>
   );
 };
 

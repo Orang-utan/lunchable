@@ -3,7 +3,8 @@ import auth from '../middleware/auth';
 import { IRoom, Room } from '../models/room.model';
 import { User } from '../models/user.model';
 import errorHandler from './error';
-import { CLIENT_URL } from '../utils/config';
+import { CLIENT_URL, DAILY_API_KEY } from '../utils/config';
+import axios from 'axios';
 
 const router = express.Router();
 
@@ -72,10 +73,26 @@ router.post('/find', auth, async (req, res) => {
     creatorId: user.id,
   });
   await newRoom.save();
-
+  // update user state
   user.matchStatus = 'searching';
   user.roomId = newRoom.id;
   await user.save();
+
+  // create video room in daily api
+  try {
+    await axios({
+      url: 'https://api.daily.co/v1/rooms',
+      method: 'POST',
+      timeout: 0,
+      headers: {
+        Authorization: `Bearer ${DAILY_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify({ name: newRoom.id }),
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   return res.status(200).json({
     message: 'No Available Rooms. Created New Room.',
@@ -146,7 +163,22 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
     await participant.save();
   }
 
+  // only delete room if user is creator
   if (room.creatorId === userId) {
+    // delete daily room
+    try {
+      await axios({
+        url: `https://api.daily.co/v1/rooms/${roomId}`,
+        method: 'DELETE',
+        timeout: 0,
+        headers: {
+          Authorization: `Bearer ${DAILY_API_KEY}`,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
     await Room.findByIdAndDelete(roomId);
     return res
       .status(200)
@@ -197,6 +229,20 @@ router.post('/complete/:roomId', auth, async (req, res) => {
     participant.matchStatus = 'rest';
     participant.roomId = null;
     await participant.save();
+  }
+
+  // delete daily room
+  try {
+    await axios({
+      url: `https://api.daily.co/v1/rooms/${roomId}`,
+      method: 'DELETE',
+      timeout: 0,
+      headers: {
+        Authorization: `Bearer ${DAILY_API_KEY}`,
+      },
+    });
+  } catch (err) {
+    console.log(err);
   }
 
   return res.status(200).json({ message: 'Room is completed now.' });
