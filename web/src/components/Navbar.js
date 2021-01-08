@@ -25,9 +25,9 @@ function Navbar() {
     <nav className="navbar-master" style={{ background: `${Colors.blue}44` }}>
       <div className="nav-container">
         <div>
-          <a href="/" className="title is-4">
+          <Link to="/" className="title is-4">
             🌯 Lunchable
-          </a>
+          </Link>
         </div>
         <div className="navbar-menu">
           <div className="navbar-end">
