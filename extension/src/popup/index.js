@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom";
 import { initAmplitude } from "./util/amplitude";
+import AppRouter from "./pages/AppRouter";
 
 initAmplitude();
 
