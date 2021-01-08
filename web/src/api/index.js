@@ -20,6 +20,10 @@ import auth from "./auth";
  */
 const api = axios.create();
 
+if (process.env.NODE_ENV === "production") {
+  api.defaults.baseURL = "https://lunchable-api.herokuapp.com/";
+}
+
 api.interceptors.request.use(async (config) => {
   if (auth.isAuthenticated) {
     if (!auth.accessToken) {
