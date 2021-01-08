@@ -206,6 +206,7 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
       setTokens("", "")
         .then(() => {
           // clean up
+          matched = false;
           unbindSocketToUID();
           clearInterval(statusInterval);
           statusInterval = null;
