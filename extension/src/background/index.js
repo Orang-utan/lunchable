@@ -110,6 +110,7 @@ function fetchStatus(roomId) {
 chrome.runtime.onMessage.addListener((msg, _, response) => {
   switch (msg.type) {
     case "findMatch":
+<<<<<<< HEAD
       getAccessToken()
         .then((accessToken) => {
           findLunch(accessToken, 2).then((res) => {
@@ -160,10 +161,23 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
           })
           .catch((error) => response({ state, error }));
       });
+=======
+      if (!statusInterval) {
+        statusInterval = setIntervalAndExecute(
+          () => console.log("hello"),
+          1000
+        );
+      }
+      break;
+    case "cancelMatch":
+      clearInterval(statusInterval);
+      statusInterval = null;
+>>>>>>> 96d1129... merged main
       break;
     case "popupInit":
       getRefreshToken()
         .then(() => {
+<<<<<<< HEAD
           getAccessToken().then((accessToken) => {
             // initialize user state
             fetchMe(accessToken)
@@ -183,6 +197,14 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
                 response({ state });
               })
               .catch((error) => response({ state, error }));
+=======
+          bindSocketToUID();
+          // clear notification
+          setNotifyCount(0, () => {
+            chrome.browserAction.setBadgeText({ text: "" });
+            const searching = statusInterval ? true : false;
+            response({ success: true, searching });
+>>>>>>> 96d1129... merged main
           });
         })
         .catch((error) => response({ state, error }));
