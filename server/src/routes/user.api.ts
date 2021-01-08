@@ -120,14 +120,22 @@ router.get('/me', auth, (req, res) => {
 /* TESTING ENDPOINTS BELOW (DELETE IN PRODUCTION) */
 /* fetch all users in database */
 router.get('/', (_, res) => {
-  User.find({})
+  if (process.env.NODE_ENV !== 'development') {
+    return errorHandler(res, 'Unauthorized request.');
+  }
+
+  return User.find({})
     .then((result: IUser[]) => res.status(200).json({ success: true, result }))
     .catch((e: Error) => errorHandler(res, e.message));
 });
 
 /* delete all users in database */
 router.delete('/', (_, res) => {
-  User.deleteMany({})
+  if (process.env.NODE_ENV !== 'development') {
+    return errorHandler(res, 'Unauthorized request.');
+  }
+
+  return User.deleteMany({})
     .then(() => res.status(200).json({ success: true }))
     .catch((e: Error) => errorHandler(res, e.message));
 });

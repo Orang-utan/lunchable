@@ -202,17 +202,25 @@ router.post('/complete/:roomId', auth, async (req, res) => {
   return res.status(200).json({ message: 'Room is completed now.' });
 });
 
-/* TESTING ENDPOINTS BELOW (DELETE IN PRODUCTION) */
+/* TESTING ENDPOINTS BELOW */
 /* fetch all rooms in database */
 router.get('/', (_, res) => {
-  Room.find({})
+  if (process.env.NODE_ENV !== 'development') {
+    return errorHandler(res, 'Unauthorized request.');
+  }
+
+  return Room.find({})
     .then((result: IRoom[]) => res.status(200).json({ success: true, result }))
     .catch((e: Error) => errorHandler(res, e.message));
 });
 
 /* delete all rooms in database */
 router.delete('/', (_, res) => {
-  Room.deleteMany({})
+  if (process.env.NODE_ENV !== 'development') {
+    return errorHandler(res, 'Unauthorized request.');
+  }
+
+  return Room.deleteMany({})
     .then(() => res.status(200).json({ success: true }))
     .catch((e: Error) => errorHandler(res, e.message));
 });
