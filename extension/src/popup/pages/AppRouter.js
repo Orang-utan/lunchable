@@ -16,6 +16,7 @@ const AppRouter = () => {
   });
 
   useEffect(() => {
+    // hydrating popup state
     chrome.runtime.sendMessage({ type: "popupInit" }, (res) => {
       setLoading(false);
       // TODO: handle error on UI
@@ -24,7 +25,6 @@ const AppRouter = () => {
         return;
       }
 
-      // set loading done
       // only update if state differs
       if (!_.isEqual(res.state, pState)) setPState(res.state);
 
@@ -33,8 +33,6 @@ const AppRouter = () => {
       // console.log(pState);
     });
   }, []);
-
-  // hydrating popup state
 
   return (
     <Router>
