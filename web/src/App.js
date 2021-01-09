@@ -15,7 +15,7 @@ import IndexPage from "./pages/IndexPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashboardPage from "./pages/DashboardPage";
 import RoomPage from "./pages/RoomPage";
-import Setting from "./pages/setting";
+import SettingPage from "./pages/SettingPage";
 
 const queryCache = new QueryCache();
 
@@ -63,7 +63,7 @@ function App() {
                   path="/dashboard"
                   component={DashboardPage}
                 />
-                <PrivateRoute exact path="/setting" component={Setting} />
+                <PrivateRoute exact path="/setting" component={SettingPage} />
                 <Route exact={false} component={NotFoundPage} />
               </Switch>
             </main>

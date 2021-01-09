@@ -22,6 +22,7 @@ const DashboardPage = (props) => {
   const history = useHistory();
 
   const [userData, setUserData] = useState(null);
+  console.log(userData);
 
   useEffect(() => {
     const onMount = async () => {
@@ -38,7 +39,6 @@ const DashboardPage = (props) => {
   };
 
   return (
-
     <div className="dash-container fade-in">
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button
@@ -46,7 +46,11 @@ const DashboardPage = (props) => {
           onClick={startMatching}
         >
           Start matching
-          <img src={Phone} style={{ marginLeft: "8px", height: "14px" }} />
+          <img
+            src={Phone}
+            alt="logo"
+            style={{ marginLeft: "8px", height: "14px" }}
+          />
         </button>
         <button
           className="buttonStandard secondary-button"
