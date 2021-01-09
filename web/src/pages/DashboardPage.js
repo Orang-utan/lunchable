@@ -20,7 +20,11 @@ const DashboardPage = () => {
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button className="buttonStandard primary-button">
           Start matching
-          <img src={Phone} style={{ marginLeft: "8px", height: "14px" }} />
+          <img
+            src={Phone}
+            alt="logo"
+            style={{ marginLeft: "8px", height: "14px" }}
+          />
         </button>
         <button className="buttonStandard secondary-button">Settings</button>
       </div>

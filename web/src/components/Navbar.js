@@ -29,6 +29,7 @@ function Navbar() {
             <>
               <img
                 src={Circle}
+                alt="logo"
                 style={{ height: "70px", marginRight: "12px" }}
               />
               <div>

@@ -3,11 +3,11 @@ import "../styles/layout.css";
 import "../styles/typography.css";
 
 function IndexPage() {
-  const startMatching = () => [
-    // Trigger matching API, display popup
-    console.log("Start matching"),
-  ];
-  return <div className="dash-container"></div>;
+  return (
+    <div className="dash-container">
+      <h1>Welcome to Lunchable</h1>
+    </div>
+  );
 }
 
 export default IndexPage;
