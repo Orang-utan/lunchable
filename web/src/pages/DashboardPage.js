@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import api from "../api";
+import { UserContext } from "../components/userContext";
 
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
 import { PageSpinner } from "../components/other/loadingSpinner";
-
 import Phone from "../assets/phone.svg";
 
 const lunches = [
@@ -22,20 +22,22 @@ const lunches = [
 const DashboardPage = (props) => {
   const history = useHistory();
 
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(null);
 
-  useEffect(() => {
-    const onMount = async () => {
-      setIsLoading(true);
-      const res = await api.get("/api/users/me");
-      console.log(res.data);
-      setUserData(res.data);
-      setIsLoading(false);
-    };
+  // const [userData, setUserData] = useState(null);
 
-    onMount();
-  }, []);
+  // useEffect(() => {
+  //   const onMount = async () => {
+  //     setIsLoading(true);
+  //     const res = await api.get("/api/users/me");
+  //     console.log(res.data);
+  //     setUserData(res.data);
+  //     setIsLoading(false);
+  //   };
+
+  //   onMount();
+  // }, []);
 
   const startMatching = () => {
     // Trigger popup somehow lol
@@ -47,6 +49,7 @@ const DashboardPage = (props) => {
     </div>
   ) : (
     <div className="dash-container fade-in">
+      {userData[0].name}
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button
           className="buttonStandard primary-button"
