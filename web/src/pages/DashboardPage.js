@@ -1,8 +1,10 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
+import "../styles/animation.css";
 import Phone from "../assets/phone.svg";
 
 const lunches = [
@@ -14,15 +16,22 @@ const lunches = [
   { name: "Daniel", date: "01/03/2020", duration: "16" },
 ];
 
-const DashboardPage = () => {
+const DashboardPage = (props) => {
+  const history = useHistory();
+
   return (
-    <div className="dash-container">
+    <div className="dash-container fade-in">
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button className="buttonStandard primary-button">
           Start matching
           <img src={Phone} style={{ marginLeft: "8px", height: "14px" }} />
         </button>
-        <button className="buttonStandard secondary-button">Settings</button>
+        <button
+          className="buttonStandard secondary-button"
+          onClick={() => history.push("/setting")}
+        >
+          Settings
+        </button>
       </div>
       <br />
       <div className="title-container">
