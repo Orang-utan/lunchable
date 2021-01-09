@@ -27,9 +27,9 @@ function Navbar() {
         <div style={{ display: "flex", flexDirection: "row" }}>
           <img src={Circle} style={{ height: "70px", marginRight: "12px" }} />
           <div>
-            <div className="caption">Kevin Zhang</div>
+            <div className="caption">Connect with friends</div>
             <div className="header1">
-              <Link to="/">Lunch center</Link>
+              <Link to="/">Lunchable</Link>
             </div>
           </div>
         </div>

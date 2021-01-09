@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import FormField from "../components/FormField";
+import { useHistory } from "react-router-dom";
 
 import "../styles/color.css";
 import "../styles/layout.css";
@@ -8,20 +9,23 @@ import "../styles/typography.css";
 import "../styles/animation.css";
 
 const Setting = () => {
-  async function handleSave({ lunchStart, duration }, actions) {
-    console.log(lunchStart, duration);
-    // validate fields
-  }
+  const history = useHistory();
 
-  const navigateHome = async () => {
-    await handleSave();
-  };
+  async function handleSave({ lunchStart, duration }, actions) {
+    // API call to save
+    console.log(lunchStart, duration);
+  }
 
   return (
     <div className="dash-container fade-in">
-      <div className="title-container">
-        <div className="header3">Setting</div>
+      <div
+        onClick={() => history.push("/dashboard")}
+        className="pointer body"
+        style={{ opacity: "0.5" }}
+      >
+        ← Home
       </div>
+      <br />
       <Formik initialValues={{ email: "", password: "" }} onSubmit={handleSave}>
         {({ errors, isSubmitting }) => (
           <Form>

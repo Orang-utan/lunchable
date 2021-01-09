@@ -35,6 +35,24 @@ const DashboardPage = (props) => {
       </div>
       <br />
       <div className="title-container">
+        <div className="header3">Week in review</div>
+      </div>
+      <div>
+        <div className="outlineCardContainer">
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div className="stat-single">
+              <div className="header4">5</div>
+              <div className="caption">Matches </div>
+            </div>
+            <div className="stat-single">
+              <div className="header4">145</div>
+              <div className="caption">Minutes spent</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div className="title-container">
         <div className="header3">Past lunches</div>
       </div>
       <div className="history-container">

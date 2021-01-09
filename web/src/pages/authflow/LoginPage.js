@@ -33,9 +33,10 @@ function LoginPage(props) {
   }
 
   return (
-    <div className="login-container shadow-main">
-      <div className="h1">Login here</div>
-      <br />
+    <div className="login-container outlineCardContainer">
+      <div className="title-container">
+        <div className="header3">Login here</div>
+      </div>
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}
@@ -60,7 +61,7 @@ function LoginPage(props) {
               className="fullstretchButton primary-button"
               disabled={isSubmitting}
             >
-              Submit
+              Log in
             </button>
           </Form>
         )}

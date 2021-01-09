@@ -8,6 +8,7 @@ function FormField({ name, type, label, errors, width }) {
       <label style={{ marginBottom: "6px" }} className="body">
         {label}
       </label>
+      <div style={{ height: "4px" }} />
       <div className="control">
         <div style={width ? { width: width } : null}>
           <Field
