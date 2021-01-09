@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Colors from "../common/Colors";
 import { AuthContext } from "../context";
+
 import "../styles/color.css";
 import "../styles/layout.css";
+import "../styles/typography.css";
+import Circle from "../assets/circle.svg";
 
 const NavBarItems = styled.div`
   &:hover {
@@ -20,12 +22,16 @@ function Navbar() {
   }
 
   return (
-    <nav className="navbar-master" style={{ background: `${Colors.blue}44` }}>
-      <div className="nav-container">
-        <div>
-          <Link to="/" className="title is-4">
-            🌯 Lunchable
-          </Link>
+    <div className="nav-master">
+      <div className="nav-horizontal-container">
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <img src={Circle} style={{ height: "70px", marginRight: "12px" }} />
+          <div>
+            <div className="caption">Kevin Zhang</div>
+            <div className="header1">
+              <Link to="/">Lunch center</Link>
+            </div>
+          </div>
         </div>
         <div className="navbar-menu">
           <div className="navbar-end">
@@ -49,7 +55,10 @@ function Navbar() {
           </div>
         </div>
       </div>
-    </nav>
+      <hr />
+      <br />
+      <br />{" "}
+    </div>
   );
 }
 
