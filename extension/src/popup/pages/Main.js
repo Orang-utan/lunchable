@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
@@ -5,6 +6,7 @@ import "../styles/Main.css";
 import "../styles/typography.css";
 
 import Feedback from "./Feedback.js";
+import { ButtonSpinner } from "../components/loadingSpinner";
 
 const EmojiPicker = () => {
   const randNum = (a, b) => {
@@ -21,6 +23,8 @@ const EmojiPicker = () => {
 };
 
 const Main = ({ pState, setPState }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   // listener for match found
   chrome.runtime.onMessage.addListener((msg, _, __) => {
     switch (msg.type) {
@@ -45,6 +49,7 @@ const Main = ({ pState, setPState }) => {
   };
 
   const startSearch = () => {
+    setIsLoading(true);
     chrome.runtime.sendMessage({ type: "findMatch" }, (res) => {
       if (res.error) {
         // TODO: handle error
@@ -109,7 +114,7 @@ const Main = ({ pState, setPState }) => {
         </div>
         <br />
         {pState.matchStatus === "rest" ? (
-          <div style={{ fontSize: "120px" }}>🤔</div>
+          <div style={{ fontSize: "110px" }}>🤔</div>
         ) : pState.matchStatus === "searching" ? (
           <EmojiPicker />
         ) : pState.matchStatus === "matched" ? (
@@ -122,6 +127,7 @@ const Main = ({ pState, setPState }) => {
           onClick={startSearch}
         >
           Join to eat
+          {isLoading && <ButtonSpinner />}
         </button>
       ) : pState.matchStatus === "searching" ? (
         <button
