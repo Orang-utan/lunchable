@@ -69,7 +69,7 @@ function Navbar() {
       </div>
       <hr />
       <br />
-      <br />{" "}
+      <br />
     </div>
   );
 }

@@ -55,7 +55,7 @@ function LoginPage() {
               className="fullstretchButton primary-button"
               disabled={isSubmitting}
             >
-              Submit
+              Log in
             </button>
           </Form>
         )}
