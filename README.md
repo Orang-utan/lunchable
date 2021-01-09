@@ -8,12 +8,12 @@ Monorepository codebase for Lunchable.
 **Folders:**
 
 - `server/`: the backend web server.
-- `client/`: the main web client.
+- `web/`: the main web client.
 - `extension/`: the Chrome extension.
 
 **Getting Started:**
 
 - Create `.env.development` in `config/`, see Notion doc for API keys.
-- `yarn install`: install dev dependencies in root
+- `yarn install`: install dev dependencies in root.
 - `yarn setup`: installing dependencies in all three folders.
 - `yarn dev`: runs the development server with hot reloading.
