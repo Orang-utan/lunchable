@@ -1,13 +1,31 @@
-.h1 {
-  font-size: 24px;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.header1 {
+  font-size: 40px;
   font-weight: bold;
   margin-bottom: 4px;
 }
 
-.h1 {
-  font-size: 22px;
+.header3 {
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 4px;
+  color: rgb(27, 27, 27);
+}
+
+.body {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(22, 22, 22);
+}
+
+.caption {
+  font-size: 14px;
+  color: rgb(131, 131, 131);
 }
 
 .bodyText {
@@ -36,5 +54,8 @@
 
 .fullstretchButton:focus {
   outline: none;
-  /* opacity: 1; */
+}
+
+.title-container {
+  padding: 12px 0 12px 0;
 }
