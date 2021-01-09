@@ -1,32 +1,37 @@
 import styled from "styled-components";
 
-const PopupContainer = styled.div`
-  text-align: left;
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-  display: flex;
-  flex-diction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
 const LoadingSkeleton = () => {
+  const randNum = (a, b) => {
+    return Math.floor(Math.random() * (b - a) + a);
+  };
+  let num = randNum(0, 3);
+
   return (
-    <PopupContainer>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <div className="food-container">
-          <div className="food-emoji rotate">🍙</div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <div className="food-container">
+        <div className="food-emoji rotate">
+          {num === 0 ? "🍜" : num === 1 ? "🍱" : num === 2 ? "🥪" : "🍔"}
         </div>
-        <div className="body">Warming up food ..</div>
       </div>
-    </PopupContainer>
+      <div className="body">
+        {num === 0
+          ? "Warming up food .."
+          : num === 1
+          ? "Gathering friends .."
+          : num === 2
+          ? "Slicing pizza .."
+          : "Setting up table .."}
+      </div>
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
+import { PageSpinner } from "../components/other/loadingSpinner";
 
 import Phone from "../assets/phone.svg";
 
@@ -22,13 +23,18 @@ const DashboardPage = (props) => {
   const history = useHistory();
 
   const [userData, setUserData] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(null);
   console.log(userData);
+
 
   useEffect(() => {
     const onMount = async () => {
+      setIsLoading(true);
       const res = await api.get("/api/users/me");
       console.log(res.data);
       setUserData(res.data);
+      setIsLoading(false);
     };
 
     onMount();
@@ -38,7 +44,11 @@ const DashboardPage = (props) => {
     // Trigger popup somehow lol
   };
 
-  return (
+  return isLoading ? (
+    <div className="dash-container">
+      <PageSpinner />
+    </div>
+  ) : (
     <div className="dash-container fade-in">
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button
@@ -48,8 +58,8 @@ const DashboardPage = (props) => {
           Start matching
           <img
             src={Phone}
-            alt="logo"
             style={{ marginLeft: "8px", height: "14px" }}
+            alt="hero"
           />
         </button>
         <button
