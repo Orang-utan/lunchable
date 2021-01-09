@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import api from "../api";
 import { UserContext } from "../components/userContext";
 
 import "../styles/color.css";
@@ -23,39 +22,35 @@ const DashboardPage = (props) => {
   const history = useHistory();
 
   const [userData, setUserData] = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(null);
-
-  // const [userData, setUserData] = useState(null);
-
-  // useEffect(() => {
-  //   const onMount = async () => {
-  //     setIsLoading(true);
-  //     const res = await api.get("/api/users/me");
-  //     console.log(res.data);
-  //     setUserData(res.data);
-  //     setIsLoading(false);
-  //   };
-
-  //   onMount();
-  // }, []);
 
   const startMatching = () => {
     // Trigger popup somehow lol
   };
 
-  return isLoading ? (
+  const joinCall = () => {
+    window.open(userData.userInfo.roomUrl);
+  };
+
+  return userData.isLoading === true ? (
     <div className="dash-container">
       <PageSpinner />
     </div>
   ) : (
     <div className="dash-container fade-in">
-      {userData[0].name}
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button
           className="buttonStandard primary-button"
-          onClick={startMatching}
+          onClick={
+            userData.userInfo.matchStatus === "matched"
+              ? joinCall
+              : startMatching
+          }
         >
-          Start matching
+          {userData.userInfo.matchStatus === "rest"
+            ? "Start matching"
+            : userData.userInfo.matchStatus === "matched"
+            ? "Join call"
+            : null}
           <img
             src={Phone}
             style={{ marginLeft: "8px", height: "14px" }}
