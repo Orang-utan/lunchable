@@ -29,8 +29,8 @@ function LoginPage() {
   }
 
   return (
-    <div className="login-container shadow-main">
-      <div className="title is-4">Welcome Back</div>
+    <div className="login-container outlineCardContainer">
+      <div className="title">Welcome Back</div>
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}
