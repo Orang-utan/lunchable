@@ -7,37 +7,37 @@ import "../styles/layout.css";
 import "../styles/Main.css";
 import "../styles/typography.css";
 
-const LoginContainer = styled.div`
-  text-align: left;
-  width: 310px;
-  max-height: 290px;
-  overflow: scroll;
-`;
-
 const Login = () => {
   const openURL = (url) => {
     chrome.tabs.create({ active: true, url });
   };
 
   return (
-    <LoginContainer>
-      <div className="header4">Welcome!</div>
-      <div className="body">
-        Connect with friends over virtual meals, just like the old days
+    <div className="contentContainer">
+      <div style={{ textAlign: "left" }}>
+        <div className="flash" style={{ fontSize: "65px" }}>
+          🍝{" "}
+        </div>
+        <div className="header4">Welcome to Lunchable</div>
+        <div className="body">
+          Connect with friends over virtual meals, just like the old days
+        </div>
       </div>
-      <button
-        className="fullstretchButton primary-button"
-        onClick={() => openURL(SIGNUP_URL)}
-      >
-        Sign up
-      </button>
-      <button
-        className="fullstretchButton secondary-button"
-        onClick={() => openURL(LOGIN_URL)}
-      >
-        Sign in
-      </button>
-    </LoginContainer>
+      <div style={{ width: "100%" }}>
+        <button
+          className="fullstretchButton primary-button"
+          onClick={() => openURL(SIGNUP_URL)}
+        >
+          Sign up
+        </button>
+        <button
+          className="fullstretchButton secondary-button"
+          onClick={() => openURL(LOGIN_URL)}
+        >
+          Sign in
+        </button>
+      </div>
+    </div>
   );
 };
 

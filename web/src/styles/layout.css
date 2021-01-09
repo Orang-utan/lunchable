@@ -47,7 +47,6 @@
   margin-top: 40px;
 }
 
-
 .info-container {
   max-width: 600px;
   margin: auto;
@@ -77,11 +76,8 @@
   background: #fcfcfc;
   transition: 0.1s;
   transform: translateY(-4px);
-
   transition: 0.05s;
 }
-
-
 
 .circle-div {
   height: 25px;
@@ -138,4 +134,3 @@ hr {
 .stat-single {
   margin-right: 40px;
 }
-
