@@ -25,13 +25,24 @@ function Navbar() {
     <div className="nav-master">
       <div className="nav-horizontal-container">
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <img src={Circle} style={{ height: "70px", marginRight: "12px" }} />
-          <div>
-            <div className="caption">Kevin Zhang</div>
+          {auth.isAuthenticated ? (
+            <>
+              <img
+                src={Circle}
+                style={{ height: "70px", marginRight: "12px" }}
+              />
+              <div>
+                <div className="caption">Kevin Zhang</div>
+                <div className="header1">
+                  <Link to="/">Lunch center</Link>
+                </div>
+              </div>
+            </>
+          ) : (
             <div className="header1">
-              <Link to="/">Lunch center</Link>
+              <Link to="/">Lunchable</Link>
             </div>
-          </div>
+          )}
         </div>
         <div className="navbar-menu">
           <div className="navbar-end">

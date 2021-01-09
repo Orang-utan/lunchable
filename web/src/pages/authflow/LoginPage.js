@@ -30,8 +30,8 @@ function LoginPage() {
 
   return (
     <div className="login-container shadow-main">
-      <div className="h1">Login here</div>
-      <br />
+      <div className="title is-4">Welcome Back</div>
+
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}
