@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import api from "../api";
 
 import "../styles/color.css";
 import "../styles/layout.css";
@@ -19,10 +20,29 @@ const lunches = [
 const DashboardPage = (props) => {
   const history = useHistory();
 
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const onMount = async () => {
+      const res = await api.get("/api/users/me");
+      console.log(res.data);
+      setUserData(res.data);
+    };
+
+    onMount();
+  }, []);
+
+  const startMatching = () => {
+    // Trigger popup somehow lol
+  };
+
   return (
     <div className="dash-container fade-in">
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <button className="buttonStandard primary-button">
+        <button
+          className="buttonStandard primary-button"
+          onClick={startMatching}
+        >
           Start matching
           <img src={Phone} style={{ marginLeft: "8px", height: "14px" }} />
         </button>

@@ -22,6 +22,8 @@ const api = axios.create();
 
 if (process.env.NODE_ENV === "production") {
   api.defaults.baseURL = "https://lunchable-api.herokuapp.com/";
+} else {
+  api.defaults.baseURL = "http://localhost:5000/";
 }
 
 api.interceptors.request.use(async (config) => {
