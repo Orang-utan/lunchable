@@ -10,12 +10,14 @@
   margin-bottom: 6px;
 }
 
-body {
-}
-
 .body {
   font-size: 16px;
   opacity: 0.6;
+}
+
+.caption {
+  font-size: 14px;
+  color: rgb(78, 78, 78);
 }
 
 .fullstretchButton {
