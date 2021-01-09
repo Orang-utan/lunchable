@@ -89,6 +89,9 @@ const Main = ({ pState, setPState }) => {
     chrome.tabs.create({ active: true, url });
   };
 
+  // apparently when an input is on the bottom half, it has an input lag.
+  // I tried putting it on top half and its smooth. wtf
+
   return pState.matchStatus === "complete" ? (
     <Feedback pState={pState} setPState={setPState} />
   ) : (
