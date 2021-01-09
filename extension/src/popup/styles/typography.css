@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
 .h1 {
   font-size: 24px;
   font-weight: bold;
@@ -10,8 +16,15 @@
   margin-bottom: 6px;
 }
 
+.header4 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: rgb(27, 27, 27);
+}
+
 .body {
-  font-size: 16px;
+  font-size: 14px;
   opacity: 0.6;
 }
 
