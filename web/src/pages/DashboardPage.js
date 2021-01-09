@@ -23,7 +23,10 @@ const DashboardPage = (props) => {
   const history = useHistory();
 
   const [userData, setUserData] = useState(null);
+
   const [isLoading, setIsLoading] = useState(null);
+  console.log(userData);
+
 
   useEffect(() => {
     const onMount = async () => {

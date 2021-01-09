@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Formik, Form } from "formik";
-import FormField from "../components/FormField";
+import { Form, Formik } from "formik";
+import React from "react";
 import { useHistory } from "react-router-dom";
-
+import FormField from "../components/FormField";
+import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
-import "../styles/animation.css";
 
 const Setting = () => {
   const history = useHistory();
