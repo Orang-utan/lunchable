@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../../context";
 import FormField from "../../components/FormField";
+import ButtonSpinner from "../../components/other/loadingSpinner";
 
 import "../../styles/color.css";
 import "../../styles/layout.css";
@@ -30,7 +31,9 @@ function LoginPage() {
 
   return (
     <div className="login-container outlineCardContainer">
-      <div className="title">Welcome Back</div>
+      <div className="title-container">
+        <div className="header3">Welcome Back</div>
+      </div>
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}
@@ -56,6 +59,7 @@ function LoginPage() {
               disabled={isSubmitting}
             >
               Log in
+              {isSubmitting && <ButtonSpinner />}
             </button>
           </Form>
         )}

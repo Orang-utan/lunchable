@@ -39,7 +39,9 @@ function RegisterPage() {
 
   return (
     <div className="login-container outlineCardContainer">
-      <div className="title is-4">Create an Account</div>
+      <div className="title-container">
+        <div className="header3">Create an account</div>
+      </div>
       <Formik
         initialValues={{ firstName: "", lastName: "", email: "", password: "" }}
         onSubmit={handleSubmit}

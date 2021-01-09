@@ -51,12 +51,16 @@ body {
   padding: 10px 10px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   width: 100%;
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
   border-radius: 6px;
   transition: 0.2s;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .fullstretchButton:hover {
@@ -80,5 +84,4 @@ select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
-
 }
