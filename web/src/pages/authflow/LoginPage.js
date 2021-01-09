@@ -3,17 +3,13 @@ import { Formik, Form } from "formik";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../../context";
 import FormField from "../../components/FormField";
-import queryString from "query-string";
 
 import "../../styles/color.css";
 import "../../styles/layout.css";
 import "../../styles/typography.css";
 
-function LoginPage(props) {
+function LoginPage() {
   const auth = useContext(AuthContext);
-  // query string
-  const parsedQuery = queryString.parse(props.location.search);
-  console.log(parsedQuery.redirect);
 
   if (auth.isAuthenticated) {
     return <Redirect to="/" />;
@@ -33,10 +29,8 @@ function LoginPage(props) {
   }
 
   return (
-    <div className="login-container outlineCardContainer">
-      <div className="title-container">
-        <div className="header3">Login here</div>
-      </div>
+    <div className="login-container shadow-main">
+      <div className="title is-4">Welcome Back</div>
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}

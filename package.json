@@ -8,6 +8,7 @@
     "setup": "concurrently \"yarn --cwd web install\" \"yarn --cwd server install\" \"yarn --cwd extension install\"",
     "dev": "concurrently -n web,server -c blue,red \"yarn --cwd web start\" \"yarn --cwd server dev\"",
     "extension": "yarn --cwd extension start:chrome",
+    "extension:build": "yarn --cwd extension build",
     "format": "prettier --write ."
   },
   "husky": {

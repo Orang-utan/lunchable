@@ -34,8 +34,10 @@ const Main = ({ pState, setPState }) => {
 
   const logout = () => {
     chrome.runtime.sendMessage({ type: "logout" }, (res) => {
+      console.log(res);
       if (res.error) {
         // TODO: handle error
+        console.log(res.error);
         return;
       }
       if (!_.isEqual(res.state, pState)) setPState(res.state);

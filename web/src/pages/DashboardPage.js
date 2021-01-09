@@ -6,6 +6,7 @@ import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
+
 import Phone from "../assets/phone.svg";
 
 const lunches = [
@@ -37,6 +38,7 @@ const DashboardPage = (props) => {
   };
 
   return (
+
     <div className="dash-container fade-in">
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button

@@ -208,7 +208,6 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
       setTokens("", "")
         .then(() => {
           // clean up
-          matched = false;
           unbindSocketToUID();
           clearInterval(statusInterval);
           statusInterval = null;
@@ -221,7 +220,9 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
           };
           response({ state });
         })
-        .catch((error) => response({ state, error }));
+        .catch((error) => {
+          response({ state, error });
+        });
       break;
     case "checkLoggedIn":
       console.log(state.loggedIn);
