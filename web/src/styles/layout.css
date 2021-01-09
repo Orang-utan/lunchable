@@ -1,20 +1,21 @@
 .dash-container {
   max-width: 800px;
   margin: auto;
-}
-
-.navbar-master {
-  width: 100vw;
-  height: 60px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid rgb(125, 184, 233);
+  flex-direction: column;
 }
 
-.nav-container {
+.nav-master {
+  padding-top: 60px;
   width: 800px;
+  min-height: 120px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-horizontal-container {
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -58,7 +59,7 @@
 }
 
 .history-card:hover {
-  border: solid 2px #164db4;
+  border: solid 2px #ec9039;
   transition: 0.05s;
 }
 
@@ -68,4 +69,29 @@
   background-color: #bbb;
   border-radius: 50%;
   display: inline-block;
+}
+
+.buttonStandard {
+  border-radius: 6px;
+  border: none;
+  padding: 11px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transition: 0.1s;
+}
+
+.buttonStandard:hover {
+  opacity: 0.8;
+  transition: 0.1s;
+}
+
+hr {
+  margin: 0 !important;
 }
