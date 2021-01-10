@@ -1,15 +1,14 @@
-import { compare, hash } from 'bcrypt';
 import express from 'express';
+import { hash, compare } from 'bcrypt';
+import { User, IUser } from '../models/user.model';
 import auth from '../middleware/auth';
-import { Room } from '../models/room.model';
-import { IUser, User } from '../models/user.model';
-import { CLIENT_URL } from '../utils/config';
 import errorHandler from './error';
 import {
   generateAccessToken,
   generateRefreshToken,
   validateRefreshToken,
 } from './user.util';
+import { CLIENT_URL } from '../utils/config';
 
 const router = express.Router();
 const saltRounds = 10;
@@ -76,7 +75,7 @@ router.post('/login', async (req, res) => {
   });
 });
 
-/** account jwt token refresh */
+/* account jwt token refresh */
 router.post('/refreshToken', (req, res) => {
   const { refreshToken } = req.body;
 
@@ -100,7 +99,7 @@ router.post('/refreshToken', (req, res) => {
     });
 });
 
-/**  get my info */
+/* protected: get my info */
 router.get('/me', auth, (req, res) => {
   const { userId } = req;
 
@@ -116,44 +115,7 @@ router.get('/me', auth, (req, res) => {
     .catch((err: Error) => errorHandler(res, err.message));
 });
 
-/**
- *  get and maintain past lunches
- * */
-router.get('/past-lunches', auth, async (req, res) => {
-  const { userId } = req;
-  const user = await User.findById(userId);
-  if (!userId || !user) return errorHandler(res, 'User does not exist.');
-
-  const foundRooms = await Room.find()
-    .where('_id')
-    .in(user.pastLunches)
-    .select('_id participants timestamp creatorId')
-    .exec();
-
-  // maintain user past lunchees
-  // delete if lunch is not found in room collection
-  user.pastLunches = user.pastLunches.filter((roomId: string) => {
-    for (const room of foundRooms) {
-      if (room._id === roomId) return true;
-    }
-    return false;
-  });
-  await user.save();
-
-  return res
-    .status(200)
-    .json({ message: 'Past Lunches found succesfully.', lunches: foundRooms });
-});
-
-/**
- *  TODO: get lunch statistics
- *  # matches in past week, # of minutes spent
- */
-router.get('/statistics', auth, async (_, res) => {
-  return res.status(200).json({ matches: 8, minutesSpent: 124 });
-});
-
-/* TESTING ENDPOINTS BELOW (DISABLED IN PRODUCTION) */
+/* TESTING ENDPOINTS BELOW (DELETE IN PRODUCTION) */
 /* fetch all users in database */
 router.get('/', (_, res) => {
   if (process.env.NODE_ENV !== 'development') {

@@ -6,7 +6,7 @@ import "../styles/Main.css";
 import "../styles/typography.css";
 
 import Feedback from "./Feedback.js";
-import { ButtonSpinner } from "../components/LoadingSpinner";
+import { ButtonSpinner } from "../components/loadingSpinner";
 
 const EmojiPicker = () => {
   const randNum = (a, b) => {

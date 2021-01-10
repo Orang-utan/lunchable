@@ -13,6 +13,7 @@ interface IUser extends mongoose.Document {
   pastLunches: string[];
   matchStatus: string; // rest | searching | matched
   roomId: string; // current room id
+  roomUrl: string;
 }
 
 const UserSchema = new Schema({

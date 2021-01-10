@@ -6,7 +6,7 @@ import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
-import { PageSpinner } from "../components/other/LoadingSpinner";
+import { PageSpinner } from "../components/other/loadingSpinner";
 
 import Phone from "../assets/phone.svg";
 
@@ -26,6 +26,7 @@ const DashboardPage = (props) => {
 
   const [isLoading, setIsLoading] = useState(null);
   console.log(userData);
+
 
   useEffect(() => {
     const onMount = async () => {

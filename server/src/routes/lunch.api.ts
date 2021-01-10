@@ -44,20 +44,13 @@ router.post('/find', auth, async (req, res) => {
   const rooms = await Room.find({});
   const roomToJoin = findAvailableRoom(rooms, maxParticipants, userId);
 
-  // compressed version to store in room
-  const compressedUser = {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-  };
-
   // if room available join, then join
   if (roomToJoin) {
-    roomToJoin.participants.push(compressedUser);
+    roomToJoin.participants.push(user.id);
     await roomToJoin.save();
 
     // defensively update everyone's status to matched
-    for (const { id: pid } of roomToJoin.participants) {
+    for (const pid of roomToJoin.participants) {
       const participant = await User.findById(pid);
       if (!participant) continue;
       participant.matchStatus = 'matched';
@@ -75,7 +68,7 @@ router.post('/find', auth, async (req, res) => {
 
   // else create a new room
   const newRoom = new Room({
-    participants: [compressedUser],
+    participants: [user.id],
     maxParticipants,
     creatorId: user.id,
   });
@@ -98,7 +91,7 @@ router.post('/find', auth, async (req, res) => {
       data: JSON.stringify({ name: newRoom.id }),
     });
   } catch (err) {
-    console.error(err);
+    console.log(err);
   }
 
   return res.status(200).json({
@@ -120,14 +113,14 @@ router.get('/status/:roomId', auth, async (req, res) => {
 
   const room = await Room.findById(roomId);
   if (!room) return errorHandler(res, 'Invalid Room ID provided.');
-  const roomUrl = `${CLIENT_URL}/rooms/${room.id}`;
 
   // no one in room except
   if (room.participants.length <= 1)
     return res
       .status(200)
-      .json({ message: 'Room is still empty.', fulfilled: false, roomUrl });
+      .json({ message: 'Room is still empty.', fulfilled: false });
 
+  const roomUrl = `${CLIENT_URL}/rooms/${room.id}`;
   return res.status(200).json({
     message: 'Room is ready. More than one person has joined.',
     fulfilled: true,
@@ -151,22 +144,18 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
   await user.save();
 
   const roomId = req.params.roomId;
-  if (!roomId) return errorHandler(res, 'No Room ID provided. ');
+  if (!roomId) return errorHandler(res, 'No Room ID provided.');
 
-  let room;
-  try {
-    room = await Room.findById(roomId);
-  } catch (err) {
-    return errorHandler(res, 'Invalid Room ID. User status was reset.');
-  }
+  const room = await Room.findById(roomId);
+  if (!room) return errorHandler(res, 'Invalid Room ID provided.');
 
   if (room.completed)
     return res
       .status(200)
       .json({ message: 'Unable to cancel: lunch already happened.' });
 
-  // defensively reset everyone's status
-  for (const { id: pid } of room.participants) {
+  // defensively update everyone's status
+  for (const pid of room.participants) {
     const participant = await User.findById(pid);
     if (!participant) continue;
     participant.roomId = null;
@@ -176,7 +165,7 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
 
   // only delete room if user is creator
   if (room.creatorId === userId) {
-    // delete room on daily and database
+    // delete daily room
     try {
       await axios({
         url: `https://api.daily.co/v1/rooms/${roomId}`,
@@ -187,7 +176,7 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
         },
       });
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
 
     await Room.findByIdAndDelete(roomId);
@@ -233,7 +222,7 @@ router.post('/complete/:roomId', auth, async (req, res) => {
   await room.save();
 
   // set room to past lunches
-  for (const { id: pid } of room.participants) {
+  for (const pid of room.participants) {
     const participant = await User.findById(pid);
     if (!participant) continue;
     participant.pastLunches.push(roomId);
@@ -253,13 +242,13 @@ router.post('/complete/:roomId', auth, async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    console.log(err);
   }
 
   return res.status(200).json({ message: 'Room is completed now.' });
 });
 
-/* TESTING ENDPOINTS BELOW (DISABLED IN PRODUCTION) */
+/* TESTING ENDPOINTS BELOW */
 /* fetch all rooms in database */
 router.get('/', (_, res) => {
   if (process.env.NODE_ENV !== 'development') {

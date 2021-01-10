@@ -2,16 +2,9 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-// sub nested document
-interface Participant {
-  id: string;
-  firstName: string;
-  lastName: string;
-}
-
 interface IRoom extends mongoose.Document {
   _id: string; // serves as the url
-  participants: Participant[]; // custom participant interface
+  participants: string[]; // user id
   maxParticipants: number;
   creatorId: string;
   completed: boolean;
@@ -19,16 +12,7 @@ interface IRoom extends mongoose.Document {
 }
 
 const RoomSchema = new Schema({
-  participants: {
-    type: [
-      {
-        id: String,
-        firstName: String,
-        lastName: String,
-      },
-    ],
-    required: true,
-  },
+  participants: { type: [String], required: true },
   maxParticipants: { type: Number, required: true },
   creatorId: { type: String, required: true },
   completed: { type: Boolean, default: false },

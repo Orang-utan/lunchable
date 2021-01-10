@@ -13,7 +13,7 @@ class AuthError extends Error {
 }
 
 const generateAccessToken = (user: IUser): string =>
-  sign(_.omit(user.toObject(), ['password', 'pastLunches']), JWT_SECRET, {
+  sign(_.omit(user.toObject(), 'password'), JWT_SECRET, {
     expiresIn: '9999 m', // for testing purposes
   });
 
