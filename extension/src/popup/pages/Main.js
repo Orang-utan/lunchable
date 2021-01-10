@@ -98,8 +98,10 @@ const Main = ({ pState, setPState }) => {
   ) : (
     <div className="contentContainer fade-in">
       <div className="top-container">
-        {pState.matchStatus === "rest" && pState.online && (
-          <div>{pState.online} users are online now</div>
+        {pState.matchStatus === "rest" && (
+          <>
+            {pState.online && <div>{pState.online} users are online now</div>}
+          </>
         )}
         <div className="h1">
           {pState.matchStatus === "rest"
@@ -159,6 +161,7 @@ const Main = ({ pState, setPState }) => {
           </button>
         </>
       ) : null}
+      {/* <button onClick={logout}>Logout</button> */}
     </div>
   );
 };
