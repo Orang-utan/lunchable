@@ -6,6 +6,7 @@ export const onConnection = (client: socket.Socket, io: socket.Server) => {
   console.log(`✅ Client ${client.id} Connected...`);
 
   // scheduler
+  // minute, hour, day of month, month, day of week
   schedule.scheduleJob('* 12 * * *', function () {
     io.emit('newNotification', {
       title: "It's Lunchtime!",

@@ -18,11 +18,8 @@ const VideoCall = styled(VideoCallFrame)`
 const RoomPage = (props) => {
   const roomID = props.match.params.roomID;
 
-  console.log(roomID);
-
   // see if room id exists in daily.co
   // if not create a room, else return the room id
-
   return (
     <Container>
       <h1 className="title is-h1">Meet your lunch date!</h1>

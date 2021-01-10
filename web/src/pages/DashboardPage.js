@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import { UserContext } from "../components/UserContext";
 import api from "../api";
-
+import { PageSpinner } from "../components/other/LoadingSpinner";
+import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
-import "../styles/animation.css";
-import { PageSpinner } from "../components/other/LoadingSpinner";
+
 // import Phone from "../assets/phone.svg";
 
 const DashboardPage = (props) => {
