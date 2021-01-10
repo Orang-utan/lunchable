@@ -239,6 +239,7 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
             loggedIn: false,
             roomUrl: null,
             roomId: null,
+            online: 0,
           };
           response({ state });
         })
