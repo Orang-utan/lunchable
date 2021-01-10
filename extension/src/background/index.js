@@ -229,6 +229,7 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
         .then((res) => {
           console.log("success");
           const newAccessToken = res.data.accessToken;
+          bindSocketToUID();
           setTokens(newAccessToken, newRefreshToken)
             .then(() => response({ success: true }))
             .catch((err) => response({ success: false, error: err }));
