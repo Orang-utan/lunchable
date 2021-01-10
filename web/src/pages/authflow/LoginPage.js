@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../../context";
 import FormField from "../../components/FormField";
-import { ButtonSpinner } from "../../components/other/loadingSpinner";
+import { ButtonSpinner } from "../../components/other/LoadingSpinner";
 
 import "../../styles/color.css";
 import "../../styles/layout.css";
