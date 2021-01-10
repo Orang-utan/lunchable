@@ -17,7 +17,7 @@ const LoadingSkeleton = () => {
         height: "100%",
       }}
     >
-      <div className="food-container">
+      <div className="loading-container">
         <div className="food-emoji rotate">
           {num === 0 ? "🍜" : num === 1 ? "🍱" : num === 2 ? "🥪" : "🍔"}
         </div>
