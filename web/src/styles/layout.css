@@ -82,7 +82,7 @@
 .circle-div {
   height: 25px;
   width: 25px;
-  background-color: #bbb;
+  background-color: rgb(229, 232, 243);
   border-radius: 50%;
   display: inline-block;
 }

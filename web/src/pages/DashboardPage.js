@@ -7,16 +7,7 @@ import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
 import { PageSpinner } from "../components/other/LoadingSpinner";
-
 import Phone from "../assets/phone.svg";
-
-const lunches = [
-  { name: "Kevin", date: "01/02/2020", duration: "32" },
-  { name: "Daniel", date: "01/03/2020", duration: "16" },
-  { name: "Kevin", date: "01/02/2020", duration: "32" },
-  { name: "Daniel", date: "01/03/2020", duration: "16" },
-  { name: "Kevin", date: "01/02/2020", duration: "32" },
-];
 
 const DashboardPage = (props) => {
   const history = useHistory();
@@ -88,7 +79,7 @@ const DashboardPage = (props) => {
         <div className="header3">Past lunches</div>
       </div>
       <div className="history-container">
-        {lunches.map((lunch) => (
+        {userData.pastLunches.map((lunch) => (
           <div className="history-card">
             <div
               style={{
@@ -100,10 +91,11 @@ const DashboardPage = (props) => {
             >
               <div>
                 <span className="circle-div"></span>
-                <div className="body">{lunch.name}</div>
-                <div className="caption">{lunch.duration} min</div>
+                <div className="body">{lunch.participants[0].firstName}</div>
+                <div className="body">{lunch.participants[1].firstName}</div>
+                <div className="caption">{lunch.duration}x min</div>
               </div>
-              <div className="caption">{lunch.date}</div>
+              <div className="caption">{lunch.timestamp.substring(0, 10)}</div>
             </div>
           </div>
         ))}
