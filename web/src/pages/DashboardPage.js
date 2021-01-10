@@ -6,7 +6,7 @@ import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
-import { PageSpinner } from "../components/other/LoadingSpinner";
+import { PageSpinner } from "../components/other/LoadingSpinner.js";
 import Phone from "../assets/phone.svg";
 
 const lunches = [
@@ -15,7 +15,6 @@ const lunches = [
   { name: "Kevin", date: "01/02/2020", duration: "32" },
   { name: "Daniel", date: "01/03/2020", duration: "16" },
   { name: "Kevin", date: "01/02/2020", duration: "32" },
-  { name: "Daniel", date: "01/03/2020", duration: "16" },
 ];
 
 const DashboardPage = (props) => {
@@ -72,11 +71,11 @@ const DashboardPage = (props) => {
         <div className="outlineCardContainer">
           <div style={{ display: "flex", flexDirection: "row" }}>
             <div className="stat-single">
-              <div className="header4">5</div>
+              <div className="header4">{userData.stats.matches}</div>
               <div className="caption">Matches </div>
             </div>
             <div className="stat-single">
-              <div className="header4">145</div>
+              <div className="header4">{userData.stats.minutesSpent}</div>
               <div className="caption">Minutes spent</div>
             </div>
           </div>
