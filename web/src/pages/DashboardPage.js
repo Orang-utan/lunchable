@@ -15,7 +15,6 @@ const lunches = [
   { name: "Kevin", date: "01/02/2020", duration: "32" },
   { name: "Daniel", date: "01/03/2020", duration: "16" },
   { name: "Kevin", date: "01/02/2020", duration: "32" },
-  { name: "Daniel", date: "01/03/2020", duration: "16" },
 ];
 
 const DashboardPage = (props) => {
