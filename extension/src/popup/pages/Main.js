@@ -98,7 +98,6 @@ const Main = ({ pState, setPState }) => {
   ) : (
     <div className="contentContainer fade-in">
       <div className="top-container">
-        <div>Currently {pState.online} users are online!</div>
         <div className="h1">
           {pState.matchStatus === "rest"
             ? `Ready to eat?`
@@ -125,6 +124,10 @@ const Main = ({ pState, setPState }) => {
         ) : pState.matchStatus === "matched" ? (
           <div style={{ fontSize: "120px" }}>😎</div>
         ) : null}
+      </div>
+      <div className="caption">
+        <div className="online-circle"></div> Currently {pState.online} users
+        are online!
       </div>
       {pState.matchStatus === "rest" ? (
         <button

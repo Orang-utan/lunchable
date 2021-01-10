@@ -86,3 +86,11 @@ body {
 .textAreaMain:focus {
   outline: none;
 }
+
+.online-circle {
+  height: 10px;
+  width: 10px;
+  background-color: rgb(95, 209, 120);
+  border-radius: 50%;
+  display: inline-block;
+}
