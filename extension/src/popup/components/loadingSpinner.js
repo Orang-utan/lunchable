@@ -1,5 +1,4 @@
-import React from "react-router-dom";
-
+import React from "react";
 import SmallSpinner from "../../img/loadingSpinner.svg";
 import BigPageSpinner from "../../img/pageSpinner.svg";
 import "../styles/animation.css";
