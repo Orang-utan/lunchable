@@ -33,7 +33,6 @@ test(
       lastName: 'Smith',
       email: 'test@gmail.com',
       password: '123456',
-      institutionName: 'My Company',
     };
 
     await supertest(app)

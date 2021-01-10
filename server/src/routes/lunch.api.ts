@@ -40,6 +40,8 @@ router.post('/find', auth, async (req, res) => {
   if (user.matchStatus === 'matched' || user.matchStatus === 'searching')
     return errorHandler(res, 'User is currently matched or still searching.');
 
+  // TODO: implement anti trolling measures here
+
   const maxParticipants = req.body.maxParticipants || 2; // if no arg, default to 2
   const rooms = await Room.find({});
   const roomToJoin = findAvailableRoom(rooms, maxParticipants, userId);
@@ -101,9 +103,11 @@ router.post('/find', auth, async (req, res) => {
     console.error(err);
   }
 
+  const roomUrl = `${CLIENT_URL}/rooms/${newRoom._id}`;
   return res.status(200).json({
     message: 'No Available Rooms. Created New Room.',
     roomId: newRoom._id,
+    roomUrl,
   });
 });
 

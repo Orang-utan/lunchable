@@ -131,7 +131,7 @@ router.get('/past-lunches', auth, async (req, res) => {
     .exec();
 
   // maintain user past lunchees
-  // delete if lunch is not found in room collection
+  // delete from past lunch if not found in room collection
   user.pastLunches = user.pastLunches.filter((roomId: string) => {
     for (const room of foundRooms) {
       if (room._id === roomId) return true;
