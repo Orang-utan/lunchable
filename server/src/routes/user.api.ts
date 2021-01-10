@@ -100,7 +100,7 @@ router.post('/refreshToken', (req, res) => {
     });
 });
 
-/**  get my info */
+/** get my info */
 router.get('/me', auth, (req, res) => {
   const { userId } = req;
 
@@ -117,7 +117,7 @@ router.get('/me', auth, (req, res) => {
 });
 
 /**
- *  get and maintain past lunches
+ * get and maintain past lunches
  * */
 router.get('/past-lunches', auth, async (req, res) => {
   const { userId } = req;

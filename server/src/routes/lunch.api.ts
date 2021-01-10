@@ -89,7 +89,7 @@ router.post('/find', auth, async (req, res) => {
 
   // create video room in daily api
   try {
-    await axios({
+    axios({
       url: 'https://api.daily.co/v1/rooms',
       method: 'POST',
       timeout: 0,
@@ -180,7 +180,7 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
   if (room.creatorId === userId) {
     // delete room on daily and database
     try {
-      await axios({
+      axios({
         url: `https://api.daily.co/v1/rooms/${roomId}`,
         method: 'DELETE',
         timeout: 0,
@@ -246,7 +246,7 @@ router.post('/complete/:roomId', auth, async (req, res) => {
 
   // delete daily room
   try {
-    await axios({
+    axios({
       url: `https://api.daily.co/v1/rooms/${roomId}`,
       method: 'DELETE',
       timeout: 0,

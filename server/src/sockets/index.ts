@@ -1,9 +1,8 @@
 import socket from 'socket.io';
 import { SocketBinding } from '../models/socket.model';
 
-export const onConnection = (client: socket.Socket, server: socket.Server) => {
+export const onConnection = (client: socket.Socket, _: socket.Server) => {
   console.log(`✅ Client ${client.id} Connected...`);
-  console.log(server.encoder);
 
   client.on('bindUID', async (payload: any) => {
     console.log('Bind UID to Socket');
@@ -11,14 +10,12 @@ export const onConnection = (client: socket.Socket, server: socket.Server) => {
     const socketId = client.id;
 
     if (!userId) {
-      console.log(payload);
-      console.log('Error: Invalid payload.');
+      console.error('Error: Invalid payload.');
       return;
     }
 
-    console.log('Created New Socket Binding');
     const newSocket = new SocketBinding({
-      userId: userId,
+      userId,
       socketId,
     });
     await newSocket.save();

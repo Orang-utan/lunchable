@@ -17,20 +17,30 @@ import {
 } from "../services/storageClient";
 
 /** background state, similar to redux */
+let socket = io.connect(API_ENDPOINT);
 let state = {
+  socketBinded: false,
   matchStatus: "rest",
   loggedIn: false,
   roomUrl: null,
   roomId: null,
 };
 
-/** socket stuff below  */
-let socket = io.connect(API_ENDPOINT);
-let uid = null;
+/** notification utility */
+function createNotification(title, message) {
+  chrome.notifications.create("", {
+    title: title,
+    message: message,
+    iconUrl: "img/icons/icon@128.png",
+    type: "basic",
+  });
+}
 
-socket.on("notifyNewLink", (payload) => {
+/** websocket infrastructure */
+/** socket listeners below */
+// new notificaiton listener
+socket.on("newNotification", (payload) => {
   getNotifyCount((count) => {
-    console.log(count);
     const newCount = count + 1 || 1;
     setNotifyCount(newCount, () => {
       if (newCount > 9) {
@@ -38,33 +48,24 @@ socket.on("notifyNewLink", (payload) => {
       } else {
         chrome.browserAction.setBadgeText({ text: String(newCount) });
       }
-      chrome.notifications.create("", {
-        title: payload.title,
-        message: payload.message,
-        iconUrl: "img/icons/icon@128.png",
-        type: "basic",
-      });
+      createNotification(payload.title, payload.message);
     });
   });
 });
 
+/** socket emitters below */
+// socket binding on startup
 function bindSocketToUID() {
   getAccessToken()
-    .then((token) => {
-      fetchMe(token).then((user) => {
-        socket.emit("bindUID", user);
-        uid = user._id;
-      });
-    })
-    .catch(() => {
-      console.error("Failed to bind user id with socket");
-    });
+    .then((token) =>
+      fetchMe(token).then((user) => socket.emit("bindUID", user))
+    )
+    .catch(() => console.error("Failed to bind user id with socket"));
 }
 
+// socket unbind on logout
 function unbindSocketToUID() {
-  if (uid) {
-    socket.emit("unbindUID");
-  }
+  socket.emit("unbindUID");
 }
 
 /** interval fetching logic */
@@ -78,7 +79,6 @@ function dispatchWorker(fn, t) {
 function fetchStatus(roomId) {
   if (isFetching) return;
   // TODO: add expire timeout
-
   isFetching = true;
   getAccessToken().then((accessToken) => {
     secureAxios({
@@ -92,19 +92,26 @@ function fetchStatus(roomId) {
       .then((res) => {
         const data = res.data;
         isFetching = false;
-        console.log(data);
+
+        // match found
         if (data.fulfilled) {
-          console.log("success!");
           state.roomUrl = data.roomUrl;
           state.matchStatus = "matched";
           chrome.runtime.sendMessage({ type: "matchFound", state });
           clearInterval(statusInterval);
+          createNotification("Match Found!", "Open Lunchable to join call.");
           statusInterval = null;
         }
       })
       .catch((err) => console.error(err));
   });
 }
+
+/**
+ * background script initialization below
+ * note: this is different from popup initialization
+ */
+bindSocketToUID();
 
 /** background script message passing core logic */
 chrome.runtime.onMessage.addListener((msg, _, response) => {
@@ -121,7 +128,7 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
               state.roomId = roomId;
               response({ state });
             } else {
-              // TODO: run get status asynchronously
+              // running worker asynchronously
               if (!statusInterval) {
                 statusInterval = dispatchWorker(
                   () => fetchStatus(roomId),
@@ -168,20 +175,25 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
             // initialize user state
             fetchMe(accessToken)
               .then((user) => {
-                // bind socket
-                bindSocketToUID();
-                // clear notification
-                setNotifyCount(0, () =>
-                  chrome.browserAction.setBadgeText({ text: "" })
-                );
-
-                localStorage.setItem("Initialized", 1);
-
+                // set state
                 const { matchStatus, roomId, roomUrl } = user;
                 state.matchStatus = matchStatus;
                 state.roomId = roomId;
                 state.roomUrl = roomUrl;
                 state.loggedIn = true;
+
+                // clear notification
+                setNotifyCount(0, () =>
+                  chrome.browserAction.setBadgeText({ text: "" })
+                );
+
+                // dispatch worker if none
+                if (!statusInterval && matchStatus === "searching") {
+                  statusInterval = dispatchWorker(
+                    () => fetchStatus(roomId),
+                    1000
+                  );
+                }
                 response({ state });
               })
               .catch((error) => response({ state, error }));

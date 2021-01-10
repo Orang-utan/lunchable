@@ -1,15 +1,12 @@
 import { useState } from "react";
-import Feedback from "./Feedback.js";
-import { ButtonSpinner } from "../components/loadingSpinner";
+import Feedback from "./Feedback";
+import { ButtonSpinner } from "../components/LoadingSpinner";
 
 import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/Main.css";
 import "../styles/typography.css";
-
-import Feedback from "./Feedback.js";
-import { ButtonSpinner } from "../components/LoadingSpinner";
 
 const EmojiPicker = () => {
   const randNum = (a, b) => {
@@ -54,6 +51,8 @@ const Main = ({ pState, setPState }) => {
   const startSearch = () => {
     setIsLoading(true);
     chrome.runtime.sendMessage({ type: "findMatch" }, (res) => {
+      console.log("find match promsie end");
+      console.log(res);
       if (res.error) {
         // TODO: handle error
         return;
