@@ -99,6 +99,7 @@ const Main = ({ pState, setPState }) => {
   ) : (
     <div className="contentContainer fade-in">
       <div className="top-container">
+        <div>Currently {pState.online} users are online!</div>
         <div className="h1">
           {pState.matchStatus === "rest"
             ? `Ready to eat?`

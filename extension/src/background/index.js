@@ -6,6 +6,7 @@ import {
   findLunch,
   cancelLunch,
   completeLunch,
+  fetchOnline,
 } from "../services/apiFactory";
 import { API_ENDPOINT } from "../services/config";
 import {
@@ -16,7 +17,7 @@ import {
   setTokens,
 } from "../services/storageClient";
 
-/** background state, similar to redux */
+/****** background state, similar to redux ******/
 let socket = io.connect(API_ENDPOINT);
 let state = {
   socketBinded: false,
@@ -24,9 +25,10 @@ let state = {
   loggedIn: false,
   roomUrl: null,
   roomId: null,
+  online: 0,
 };
 
-/** notification utility */
+/****** notification utility ******/
 function createNotification(title, message) {
   chrome.notifications.create("", {
     title: title,
@@ -36,7 +38,7 @@ function createNotification(title, message) {
   });
 }
 
-/** websocket infrastructure */
+/****** websocket infrastructure ******/
 /** socket listeners below */
 // new notificaiton listener
 socket.on("newNotification", (payload) => {
@@ -68,7 +70,7 @@ function unbindSocketToUID() {
   socket.emit("unbindUID");
 }
 
-/** interval fetching logic */
+/****** interval fetching logic ******/
 let statusInterval = null;
 let isFetching = false;
 function dispatchWorker(fn, t) {
@@ -113,7 +115,7 @@ function fetchStatus(roomId) {
  */
 bindSocketToUID();
 
-/** background script message passing core logic */
+/****** background script message passing core logic ******/
 chrome.runtime.onMessage.addListener((msg, _, response) => {
   switch (msg.type) {
     case "findMatch":
@@ -187,14 +189,21 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
                   chrome.browserAction.setBadgeText({ text: "" })
                 );
 
-                // dispatch worker if none
+                // dispatch worker if none & user is still searching
                 if (!statusInterval && matchStatus === "searching") {
                   statusInterval = dispatchWorker(
                     () => fetchStatus(roomId),
                     1000
                   );
                 }
-                response({ state });
+
+                // fetch online users
+                fetchOnline(accessToken)
+                  .then((res) => {
+                    state.online = res.onlineUsers;
+                    response({ state });
+                  })
+                  .catch((error) => response({ state, error }));
               })
               .catch((error) => response({ state, error }));
           });

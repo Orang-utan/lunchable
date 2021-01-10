@@ -86,4 +86,21 @@ function completeLunch(ACCESS_TOKEN, roomId) {
   });
 }
 
-export { login, fetchMe, findLunch, cancelLunch, completeLunch };
+function fetchOnline(ACCESS_TOKEN) {
+  return new Promise((resolve, reject) => {
+    secureAxios({
+      url: "/api/users/online",
+      method: "GET",
+      timeout: 0,
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    })
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => reject(err.response));
+  });
+}
+
+export { login, fetchMe, findLunch, cancelLunch, completeLunch, fetchOnline };

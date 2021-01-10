@@ -14,6 +14,13 @@ export const onConnection = (client: socket.Socket, _: socket.Server) => {
       return;
     }
 
+    const existingSocket = await SocketBinding.findOne({ userId });
+    if (existingSocket) {
+      existingSocket.socketId = socketId;
+      await existingSocket.save();
+      return;
+    }
+
     const newSocket = new SocketBinding({
       userId,
       socketId,

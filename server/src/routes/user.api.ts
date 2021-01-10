@@ -3,6 +3,7 @@ import express from 'express';
 import auth from '../middleware/auth';
 import { Room } from '../models/room.model';
 import { IUser, User } from '../models/user.model';
+import { SocketBinding } from '../models/socket.model';
 import { CLIENT_URL } from '../utils/config';
 import errorHandler from './error';
 import {
@@ -151,6 +152,15 @@ router.get('/past-lunches', auth, async (req, res) => {
  */
 router.get('/statistics', auth, async (_, res) => {
   return res.status(200).json({ matches: 8, minutesSpent: 124 });
+});
+
+/**
+ * get number of people online now
+ * note: just count number of socket bindings
+ */
+router.get('/online', auth, async (_, res) => {
+  const number = await SocketBinding.countDocuments();
+  return res.status(200).json({ onlineUsers: number });
 });
 
 /* TESTING ENDPOINTS BELOW (DISABLED IN PRODUCTION) */

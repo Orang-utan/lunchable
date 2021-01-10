@@ -13,6 +13,7 @@ const AppRouter = () => {
     loggedIn: false,
     roomUrl: null,
     roomId: null,
+    online: 0,
   });
 
   useEffect(() => {
