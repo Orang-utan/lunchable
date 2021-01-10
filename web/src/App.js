@@ -7,7 +7,7 @@ import AppContainer from "./components/AppContainer";
 import PublicRoute from "./components/routing/PublicRoute";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import { AuthContext } from "./context";
-import { UserProvider } from "./components/userContext";
+import { UserProvider } from "./components/UserContext";
 
 // import pages
 import LoginPage from "./pages/authflow/LoginPage";
