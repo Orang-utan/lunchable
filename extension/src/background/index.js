@@ -31,10 +31,11 @@ let state = {
 
 /****** notification utility ******/
 function createNotification(title, message) {
+  console.log("notificaiton creating...");
   chrome.notifications.create("", {
     title: title,
     message: message,
-    iconUrl: "img/icons/icon@128.png",
+    iconUrl: "img/favicon/icon@128.png",
     type: "basic",
   });
 }
@@ -98,11 +99,11 @@ function fetchStatus(roomId) {
 
         // match found
         if (data.fulfilled) {
+          createNotification("Match Found!", "Open Lunchable to join call.");
           state.roomUrl = data.roomUrl;
           state.matchStatus = "matched";
           chrome.runtime.sendMessage({ type: "matchFound", state });
           clearInterval(statusInterval);
-          createNotification("Match Found!", "Open Lunchable to join call.");
           statusInterval = null;
         }
       })
@@ -181,6 +182,7 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
         .catch((error) => response(error));
 
     case "popupInit":
+      bindSocketToUID();
       getRefreshToken()
         .then(() => {
           getAccessToken().then((accessToken) => {
@@ -229,7 +231,6 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
         .then((res) => {
           console.log("success");
           const newAccessToken = res.data.accessToken;
-          bindSocketToUID();
           setTokens(newAccessToken, newRefreshToken)
             .then(() => response({ success: true }))
             .catch((err) => response({ success: false, error: err }));
