@@ -5,22 +5,22 @@ import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
 
-const Feedback = ({ pState, setPState }) => {
+const Feedback = ({ pState, setPState, setInFeedback }) => {
   const [stars, setStars] = useState(1);
   const [feedback, setFeedback] = useState("");
 
-  const submitFeedback = () => {
+  const submitFeedback = async () => {
     let feedbackObj = { stars, feedback };
 
-    // API Call here plz
-    setPState({ ...pState, matchStatus: "rest" });
+    // API Call here to submit feedback
+    setInFeedback(false);
   };
 
   return (
     <div className="contentContainer">
-      <div>
+      <div style={{ width: "100%" }}>
         <div className="h1">How was the call?</div>
-        <div className="flex-row">
+        <div className="flex-row" style={{ margin: "auto" }}>
           {[...Array(5)].map((star, idx) => {
             return (
               <div
