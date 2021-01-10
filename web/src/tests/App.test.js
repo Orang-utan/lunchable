@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
-import App from "../App";
+import IndexPage from "../pages/IndexPage";
 
 test("renders", () => {
-  render(<App />);
+  render(<IndexPage />);
 });
