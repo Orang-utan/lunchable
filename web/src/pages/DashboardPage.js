@@ -71,11 +71,11 @@ const DashboardPage = (props) => {
         <div className="outlineCardContainer">
           <div style={{ display: "flex", flexDirection: "row" }}>
             <div className="stat-single">
-              <div className="header4">5</div>
+              <div className="header4">{userData.stats.matches}</div>
               <div className="caption">Matches </div>
             </div>
             <div className="stat-single">
-              <div className="header4">145</div>
+              <div className="header4">{userData.stats.minutesSpent}</div>
               <div className="caption">Minutes spent</div>
             </div>
           </div>
