@@ -1,5 +1,3 @@
-import { submitFeedback } from "../../services/apiFactory";
-
 import React, { useState } from "react";
 import Star1 from "../../img/star1.svg";
 import Star2 from "../../img/star2.svg";

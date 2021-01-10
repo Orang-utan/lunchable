@@ -159,6 +159,7 @@ const Main = ({ pState, setPState }) => {
           </button>
         </>
       ) : null}
+      {/* <button onClick={logout}>Logout</button> */}
     </div>
   );
 };
