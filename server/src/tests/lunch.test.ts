@@ -69,7 +69,6 @@ test('find lunch', async () => {
     .expect(200);
   expect(response.body.message).toBeTruthy();
   expect(response.body.roomId).toBeTruthy();
-  expect(response.body.roomUrl).toBeTruthy();
 });
 
 /* kill database string after all tests */
