@@ -44,6 +44,7 @@ function createNotification(title, message) {
 /** socket listeners below */
 // new notificaiton listener
 socket.on("newNotification", (payload) => {
+  console.log("new notification received");
   getNotifyCount((count) => {
     const newCount = count + 1 || 1;
     setNotifyCount(newCount, () => {

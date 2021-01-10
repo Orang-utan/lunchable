@@ -1,8 +1,17 @@
 import socket from 'socket.io';
+import schedule from 'node-schedule';
 import { SocketBinding } from '../models/socket.model';
 
-export const onConnection = (client: socket.Socket, _: socket.Server) => {
+export const onConnection = (client: socket.Socket, io: socket.Server) => {
   console.log(`✅ Client ${client.id} Connected...`);
+
+  // scheduler
+  schedule.scheduleJob('* 12 * * *', function () {
+    io.emit('newNotification', {
+      title: "It's Lunchtime!",
+      message: 'Open Lunchable to reconnect with a friend over lunch 🌟',
+    });
+  });
 
   client.on('bindUID', async (payload: any) => {
     console.log('Bind UID to Socket');
