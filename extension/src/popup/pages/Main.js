@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Feedback from "./Feedback.js";
+import { ButtonSpinner } from "../components/loadingSpinner";
+
 import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";
@@ -95,7 +98,7 @@ const Main = ({ pState, setPState }) => {
   return pState.matchStatus === "complete" ? (
     <Feedback pState={pState} setPState={setPState} />
   ) : (
-    <div className="contentContainer">
+    <div className="contentContainer fade-in">
       <div className="top-container">
         <div className="h1">
           {pState.matchStatus === "rest"

@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import api from "../api";
+import { UserContext } from "../components/userContext";
 
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
 import { PageSpinner } from "../components/other/LoadingSpinner";
-
 import Phone from "../assets/phone.svg";
 
 const lunches = [
@@ -22,28 +21,17 @@ const lunches = [
 const DashboardPage = (props) => {
   const history = useHistory();
 
-  const [userData, setUserData] = useState(null);
-
-  const [isLoading, setIsLoading] = useState(null);
-  console.log(userData);
-
-  useEffect(() => {
-    const onMount = async () => {
-      setIsLoading(true);
-      const res = await api.get("/api/users/me");
-      console.log(res.data);
-      setUserData(res.data);
-      setIsLoading(false);
-    };
-
-    onMount();
-  }, []);
+  const [userData, setUserData] = useContext(UserContext);
 
   const startMatching = () => {
     // Trigger popup somehow lol
   };
 
-  return isLoading ? (
+  const joinCall = () => {
+    window.open(userData.userInfo.roomUrl);
+  };
+
+  return userData.isLoading === true ? (
     <div className="dash-container">
       <PageSpinner />
     </div>
@@ -52,9 +40,17 @@ const DashboardPage = (props) => {
       <div style={{ display: "flex", flexDirection: "row" }}>
         <button
           className="buttonStandard primary-button"
-          onClick={startMatching}
+          onClick={
+            userData.userInfo.matchStatus === "matched"
+              ? joinCall
+              : startMatching
+          }
         >
-          Start matching
+          {userData.userInfo.matchStatus === "rest"
+            ? "Start matching"
+            : userData.userInfo.matchStatus === "matched"
+            ? "Join call"
+            : null}
           <img
             src={Phone}
             style={{ marginLeft: "8px", height: "14px" }}

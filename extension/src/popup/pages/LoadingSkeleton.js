@@ -4,7 +4,7 @@ const LoadingSkeleton = () => {
   const randNum = (a, b) => {
     return Math.floor(Math.random() * (b - a) + a);
   };
-  let num = randNum(0, 3);
+  let num = randNum(0, 4);
 
   return (
     <div
