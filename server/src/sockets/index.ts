@@ -6,7 +6,7 @@ export const onConnection = (client: socket.Socket, io: socket.Server) => {
   console.log(`✅ Client ${client.id} Connected...`);
 
   // scheduler
-  schedule.scheduleJob('30 * * * * *', function () {
+  schedule.scheduleJob('* 12 * * *', function () {
     io.emit('newNotification', {
       title: "It's Lunchtime!",
       message: 'Open Lunchable to reconnect with a friend over lunch 🌟',
