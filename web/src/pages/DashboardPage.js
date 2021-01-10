@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import { UserContext } from "../components/UserContext";
 import api from "../api";
-import { PageSpinner } from "../components/other/LoadingSpinner";
+import { PageSpinner } from "../components/LoadingSpinner";
 import "../styles/animation.css";
 import "../styles/color.css";
 import "../styles/layout.css";

@@ -1,7 +1,7 @@
 import React from "react-router-dom";
 
-import SmallSpinner from "../../assets/loadingSpinner.svg";
-import BigPageSpinner from "../../assets/pageSpinner.svg";
+import SmallSpinner from "../assets/loadingSpinner.svg";
+import BigPageSpinner from "../assets/pageSpinner.svg";
 
 const ButtonSpinner = () => {
   return (
