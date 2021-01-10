@@ -2,6 +2,7 @@ import { compare, hash } from 'bcrypt';
 import express from 'express';
 import auth from '../middleware/auth';
 import { Room } from '../models/room.model';
+import { Feedback } from '../models/feedback.model';
 import { IUser, User } from '../models/user.model';
 import { SocketBinding } from '../models/socket.model';
 import { CLIENT_URL } from '../utils/config';
@@ -144,6 +145,25 @@ router.get('/past-lunches', auth, async (req, res) => {
   return res
     .status(200)
     .json({ message: 'Past Lunches found succesfully.', lunches: foundRooms });
+});
+
+/**
+ * posting feedback
+ */
+router.post('/feedback', auth, async (req, res) => {
+  const { userId } = req;
+  const user = await User.findById(userId);
+  if (!userId || !user) return errorHandler(res, 'User does not exist.');
+  const { feedback } = req.body;
+
+  try {
+    const newFeedback = new Feedback({ creatorId: userId, feedback });
+    await newFeedback.save();
+  } catch (err) {
+    return errorHandler(res, 'Invalid feedback.');
+  }
+
+  return res.status(200).json({ message: 'Feedback posted succesfully.' });
 });
 
 /**
