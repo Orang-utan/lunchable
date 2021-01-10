@@ -16,7 +16,7 @@ import IndexPage from "./pages/IndexPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashboardPage from "./pages/DashboardPage";
 import RoomPage from "./pages/RoomPage";
-import Setting from "./pages/setting";
+import SettingPage from "./pages/SettingPage";
 
 const queryCache = new QueryCache();
 
@@ -44,6 +44,7 @@ function App() {
   );
 
   return (
+
     <UserProvider>
       <AuthContext.Provider value={authContextValue}>
         <Router>

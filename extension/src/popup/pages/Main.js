@@ -8,6 +8,9 @@ import "../styles/layout.css";
 import "../styles/Main.css";
 import "../styles/typography.css";
 
+import Feedback from "./Feedback.js";
+import { ButtonSpinner } from "../components/LoadingSpinner";
+
 const EmojiPicker = () => {
   const randNum = (a, b) => {
     return Math.floor(Math.random() * (b - a) + a);
