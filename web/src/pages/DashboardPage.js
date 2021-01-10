@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { UserContext } from "../components/userContext";
+import { UserContext } from "../components/UserContext";
 
 import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
-import { PageSpinner } from "../components/other/LoadingSpinner.js";
+import { PageSpinner } from "../components/other/LoadingSpinner";
 import Phone from "../assets/phone.svg";
 
 const lunches = [
@@ -20,7 +20,7 @@ const lunches = [
 const DashboardPage = (props) => {
   const history = useHistory();
 
-  const [userData, setUserData] = useContext(UserContext);
+  const [userData] = useContext(UserContext);
 
   const startMatching = () => {
     // Trigger popup somehow lol
