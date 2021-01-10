@@ -24,7 +24,7 @@ const EmojiPicker = () => {
 
 const Main = ({ pState, setPState }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [inFeedback, setInFeedback] = useState(true);
+  const [inFeedback, setInFeedback] = useState(false);
 
   // listener for match found
   chrome.runtime.onMessage.addListener((msg, _, __) => {
@@ -112,7 +112,7 @@ const Main = ({ pState, setPState }) => {
           {pState.matchStatus === "rest"
             ? `Match with your friends`
             : pState.matchStatus === "searching"
-            ? `Hang on tight!`
+            ? `Feel free to close the extension! We'll notify you when it's ready`
             : pState.matchStatus === "matched"
             ? "Yay"
             : null}
@@ -157,9 +157,11 @@ const Main = ({ pState, setPState }) => {
           </button>
         </>
       ) : null}
-      <button onClick={logout} className="fullstretchButton secondary-button">
-        Logout
-      </button>
+      {pState.matchStatus === "searching" ? null : (
+        <button onClick={logout} className="fullstretchButton secondary-button">
+          Logout
+        </button>
+      )}
     </div>
   );
 };
