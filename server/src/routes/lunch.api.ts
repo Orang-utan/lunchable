@@ -103,11 +103,9 @@ router.post('/find', auth, async (req, res) => {
     console.error(err);
   }
 
-  const roomUrl = `${CLIENT_URL}/rooms/${newRoom._id}`;
   return res.status(200).json({
     message: 'No Available Rooms. Created New Room.',
     roomId: newRoom._id,
-    roomUrl,
   });
 });
 

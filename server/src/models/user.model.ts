@@ -1,3 +1,7 @@
+/**
+ * database model for user
+ */
+
 import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
