@@ -27,7 +27,7 @@ function IndexPage() {
         <div>
           It's simple! When you feel like eating lunch, simply tap the extension
           and click start matching. We then do our best to automatically connect
-          you to a friend to hang out with while you gys eat!{" "}
+          you to a friend to hang out with while you guys eat!{" "}
         </div>
       </div>
     </div>
