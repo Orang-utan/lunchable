@@ -24,7 +24,7 @@ const EmojiPicker = () => {
 
 const Main = ({ pState, setPState }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [inFeedback, setInFeedback] = useState(true);
+  const [inFeedback, setInFeedback] = useState(false);
 
   // listener for match found
   chrome.runtime.onMessage.addListener((msg, _, __) => {
