@@ -170,6 +170,7 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
           .catch((error) => response({ state, error }));
       });
       break;
+
     case "popupInit":
       getRefreshToken()
         .then(() => {

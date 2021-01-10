@@ -24,6 +24,7 @@ const EmojiPicker = () => {
 
 const Main = ({ pState, setPState }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [inFeedback, setInFeedback] = useState(true);
 
   // listener for match found
   chrome.runtime.onMessage.addListener((msg, _, __) => {
@@ -78,6 +79,7 @@ const Main = ({ pState, setPState }) => {
         return;
       }
       if (!_.isEqual(res.state, pState)) setPState(res.state);
+      setInFeedback(true);
     });
   };
 
@@ -91,11 +93,8 @@ const Main = ({ pState, setPState }) => {
     chrome.tabs.create({ active: true, url });
   };
 
-  // apparently when an input is on the bottom half, it has an input lag.
-  // I tried putting it on top half and its smooth. wtf
-
-  return pState.matchStatus === "complete" ? (
-    <Feedback pState={pState} setPState={setPState} />
+  return inFeedback === true ? (
+    <Feedback setInFeedback={setInFeedback} />
   ) : (
     <div className="contentContainer fade-in">
       <div className="top-container">
