@@ -6,7 +6,7 @@ import "../styles/color.css";
 import "../styles/layout.css";
 import "../styles/typography.css";
 import "../styles/animation.css";
-import { PageSpinner } from "../components/other/LoadingSpinner";
+import { PageSpinner } from "../components/other/LoadingSpinner.js";
 import Phone from "../assets/phone.svg";
 
 const lunches = [

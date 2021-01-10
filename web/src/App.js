@@ -44,7 +44,6 @@ function App() {
   );
 
   return (
-
     <UserProvider>
       <AuthContext.Provider value={authContextValue}>
         <Router>
@@ -70,7 +69,7 @@ function App() {
                     path="/dashboard"
                     component={DashboardPage}
                   />
-                  <PrivateRoute exact path="/setting" component={Setting} />
+                  <PrivateRoute exact path="/setting" component={SettingPage} />
                   <Route exact={false} component={NotFoundPage} />
                 </Switch>
               </main>
