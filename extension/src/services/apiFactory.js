@@ -103,4 +103,31 @@ function fetchOnline(ACCESS_TOKEN) {
   });
 }
 
-export { login, fetchMe, findLunch, cancelLunch, completeLunch, fetchOnline };
+function submitFeedback(ACCESS_TOKEN, feedbackObj) {
+  return new Promise((resolve, reject) => {
+    secureAxios({
+      url: "/api/users/feedback",
+      method: "POST",
+      timeout: 0,
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({ feedback: feedbackObj }),
+    })
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => reject(err.response));
+  });
+}
+
+export {
+  login,
+  fetchMe,
+  findLunch,
+  cancelLunch,
+  completeLunch,
+  fetchOnline,
+  submitFeedback,
+};

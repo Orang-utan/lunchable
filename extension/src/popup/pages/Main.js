@@ -24,7 +24,7 @@ const EmojiPicker = () => {
 
 const Main = ({ pState, setPState }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [inFeedback, setInFeedback] = useState(false);
+  const [inFeedback, setInFeedback] = useState(true);
 
   // listener for match found
   chrome.runtime.onMessage.addListener((msg, _, __) => {
@@ -157,11 +157,6 @@ const Main = ({ pState, setPState }) => {
           </button>
         </>
       ) : null}
-      {pState.matchStatus === "searching" ? null : (
-        <button onClick={logout} className="fullstretchButton secondary-button">
-          Logout
-        </button>
-      )}
     </div>
   );
 };

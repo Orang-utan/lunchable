@@ -7,6 +7,7 @@ import {
   cancelLunch,
   completeLunch,
   fetchOnline,
+  submitFeedback,
 } from "../services/apiFactory";
 import { API_ENDPOINT } from "../services/config";
 import {
@@ -170,6 +171,14 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
           .catch((error) => response({ state, error }));
       });
       break;
+    case "submitFeedback":
+      getAccessToken()
+        .then((accessToken) => {
+          submitFeedback(accessToken, msg.payload).then((res) => {
+            response(res);
+          });
+        })
+        .catch((error) => response(error));
 
     case "popupInit":
       getRefreshToken()

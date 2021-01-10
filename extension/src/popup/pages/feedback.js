@@ -1,3 +1,5 @@
+import { submitFeedback } from "../../services/apiFactory";
+
 import React, { useState } from "react";
 import Star1 from "../../img/star1.svg";
 import Star2 from "../../img/star2.svg";
@@ -10,10 +12,9 @@ const Feedback = ({ setInFeedback }) => {
   const [feedback, setFeedback] = useState("");
 
   const submitFeedback = async () => {
-    const feedbackObj = `${stars}; ${feedback}`;
-    console.log(feedbackObj);
+    const payload = `${stars}; ${feedback}`;
 
-    // API Call here to submit feedback
+    chrome.runtime.sendMessage({ type: "submitFeedback", payload });
     setInFeedback(false);
   };
 
