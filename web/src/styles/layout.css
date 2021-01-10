@@ -72,6 +72,14 @@
   transition: 0.1s;
 }
 
+.info-card {
+  border-radius: 4px;
+  border: solid 2px #b9deff;
+  padding: 12px;
+  transition: 0.1s;
+  background: #f3f9ff;
+}
+
 .history-card:hover {
   background: #fcfcfc;
   transition: 0.1s;
@@ -82,7 +90,7 @@
 .circle-div {
   height: 25px;
   width: 25px;
-  background-color: #bbb;
+  background-color: rgb(229, 232, 243);
   border-radius: 50%;
   display: inline-block;
 }

@@ -7,7 +7,7 @@ import AppContainer from "./components/AppContainer";
 import PublicRoute from "./components/routing/PublicRoute";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import { AuthContext } from "./context";
-import { UserProvider } from "./components/UserContext";
+// import { UserProvider } from "./components/UserContext";
 
 // import pages
 import LoginPage from "./pages/authflow/LoginPage";
@@ -44,40 +44,34 @@ function App() {
   );
 
   return (
-    <UserProvider>
-      <AuthContext.Provider value={authContextValue}>
-        <Router>
-          <AppContainer>
-            <ReactQueryCacheProvider queryCache={queryCache}>
-              <ReactQueryDevtools />
-              <main>
-                <Switch>
-                  <PublicRoute exact path="/" component={IndexPage} />
-                  <PublicRoute exact path="/login" component={LoginPage} />
-                  <PublicRoute
-                    exact
-                    path="/register"
-                    component={RegisterPage}
-                  />
-                  <PrivateRoute
-                    exact
-                    path="/rooms/:roomID"
-                    component={RoomPage}
-                  />
-                  <PrivateRoute
-                    exact
-                    path="/dashboard"
-                    component={DashboardPage}
-                  />
-                  <PrivateRoute exact path="/setting" component={SettingPage} />
-                  <Route exact={false} component={NotFoundPage} />
-                </Switch>
-              </main>
-            </ReactQueryCacheProvider>
-          </AppContainer>
-        </Router>
-      </AuthContext.Provider>
-    </UserProvider>
+    <AuthContext.Provider value={authContextValue}>
+      <Router>
+        <AppContainer>
+          <ReactQueryCacheProvider queryCache={queryCache}>
+            <ReactQueryDevtools />
+            <main>
+              <Switch>
+                <PublicRoute exact path="/" component={IndexPage} />
+                <PublicRoute exact path="/login" component={LoginPage} />
+                <PublicRoute exact path="/register" component={RegisterPage} />
+                <PrivateRoute
+                  exact
+                  path="/rooms/:roomID"
+                  component={RoomPage}
+                />
+                <PrivateRoute
+                  exact
+                  path="/dashboard"
+                  component={DashboardPage}
+                />
+                <PrivateRoute exact path="/setting" component={SettingPage} />
+                <Route exact={false} component={NotFoundPage} />
+              </Switch>
+            </main>
+          </ReactQueryCacheProvider>
+        </AppContainer>
+      </Router>
+    </AuthContext.Provider>
   );
 }
 

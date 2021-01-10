@@ -33,7 +33,7 @@ function Navbar() {
                 style={{ height: "70px", marginRight: "12px" }}
               />
               <div>
-                <div className="caption">Kevin Zhang</div>
+                <div className="caption">Hang with friends</div>
                 <div className="header1">
                   <Link to="/">Lunch center</Link>
                 </div>
