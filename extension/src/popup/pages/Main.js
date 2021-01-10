@@ -116,7 +116,6 @@ const Main = ({ pState, setPState }) => {
             ? "Yay"
             : null}
         </div>
-        <br />
         {pState.matchStatus === "rest" ? (
           <div style={{ fontSize: "110px" }}>🤔</div>
         ) : pState.matchStatus === "searching" ? (
