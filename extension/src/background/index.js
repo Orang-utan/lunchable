@@ -60,6 +60,8 @@ socket.on("newNotification", (payload) => {
 /** socket emitters below */
 // socket binding on startup
 function bindSocketToUID(user) {
+  if (!user || !user._id) return;
+  console.log("Binding sockets: " + JSON.stringify(user));
   socket.emit("bindUID", user);
 }
 

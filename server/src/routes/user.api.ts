@@ -129,7 +129,7 @@ router.get('/me', auth, (req, res) => {
     .select('firstName lastName email _id matchStatus roomId')
     .then((user: any) => {
       if (!user) return errorHandler(res, 'User does not exist.');
-      const roomUrl = `${CLIENT_URL}/rooms/${user.roomId}`;
+      const roomUrl = user.roomId ? `${CLIENT_URL}/rooms/${user.roomId}` : null;
       return res
         .status(200)
         .json({ success: true, data: { roomUrl, ...user._doc } });
