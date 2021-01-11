@@ -25,13 +25,17 @@ function IndexPage() {
           <div className="header3">👀 How do I get started?</div>
         </div>
         <div>
-          We're currently looking for beta-testers to help us test the product.
-          If you would like to get access to our beta version, please fill out
-          our{" "}
-          <a href="/" style={{ color: "#3498db" }} target="_blank">
+          We're currently looking for beta-testers to help us improve the
+          product. If this sounds interesting to you, please fill out our{" "}
+          <a
+            href="https://forms.gle/V7mZSZ4mzzJ7Uo1Q7"
+            style={{ color: "#3498db" }}
+            target="_blank"
+            rel="noreferrer"
+          >
             interest form here
           </a>
-          ! We'll get back to you asap with an invitation code.
+          ! We'll get back to you shortly with an invitation code.
         </div>
       </div>
     </div>
