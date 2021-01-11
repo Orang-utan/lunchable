@@ -7,7 +7,7 @@ function IndexPage() {
     <div className="dash-container">
       <div className="info-container outlineCardContainer">
         <div className="title-container">
-          <div className="header3">What is Lunchable?</div>
+          <div className="header3">🌯 What is Lunchable?</div>
         </div>
         <div>
           Lunchable is a way for you to eat virtually with friends and catch up
@@ -22,12 +22,16 @@ function IndexPage() {
         </div>
         <br />
         <div className="title-container">
-          <div className="header3">How does it work?</div>
+          <div className="header3">👀 How do I get started?</div>
         </div>
         <div>
-          It's simple! When you feel like eating lunch, simply tap the extension
-          and click start matching. We then do our best to automatically connect
-          you to a friend to hang out with while you guys eat!{" "}
+          We're currently looking for beta-testers to help us test the product.
+          If you would like to get access to our beta version, please fill out
+          our{" "}
+          <a href="/" style={{ color: "#3498db" }} target="_blank">
+            interest form here
+          </a>
+          ! We'll get back to you asap with an invitation code.
         </div>
       </div>
     </div>
