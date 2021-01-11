@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { getGravatarUrl } from "react-awesome-gravatar";
+import { timeAgo } from "../utils/timeUtils";
 // import { UserContext } from "../components/UserContext";
 import api from "../api";
 import { PageSpinner } from "../components/LoadingSpinner";
@@ -60,28 +62,36 @@ const DashboardPage = (props) => {
         <div className="header3">Past lunches</div>
       </div>
       <div className="history-container">
-        {pastLunches.map((lunch) => (
-          <div className="history-card">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                height: "100%",
-              }}
-            >
-              <div>
-                <span className="circle-div"></span>
-                <div className="body body-main">
-                  {lunch.participants[0].firstName === userInfo.firstName
-                    ? lunch.participants[1].firstName
-                    : lunch.participants[0].firstName}
+        {pastLunches.map((lunch) => {
+          const otherUserIdx =
+            lunch.participants[0].email === userInfo.email ? 1 : 0;
+          const relativeTime = timeAgo.format(new Date(lunch.timestamp));
+          const profileUrl = getGravatarUrl(
+            lunch.participants[otherUserIdx].email
+          );
+          return (
+            <div className="history-card">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
+              >
+                <div>
+                  <img src={profileUrl} alt="profile" className="circle-div" />
+
+                  <div className="body body-main">
+                    {lunch.participants[otherUserIdx].firstName}{" "}
+                    {lunch.participants[otherUserIdx].lastName}
+                  </div>
                 </div>
+                <div className="caption">{relativeTime}</div>
               </div>
-              <div className="caption">{lunch.timestamp.substring(0, 10)}</div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <br />
       <div style={{ display: "flex", flexDirection: "row" }}>
