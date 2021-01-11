@@ -11,7 +11,6 @@ interface ISocketBinding extends mongoose.Document {
   _id: string;
   socketId: string;
   userId: string;
-  // TODO: last updated, will have worker that removes all stale binding
   timestamp: Date;
 }
 

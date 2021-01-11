@@ -3,6 +3,7 @@ import express from 'express';
 import auth from '../middleware/auth';
 import { Room } from '../models/room.model';
 import { Feedback } from '../models/feedback.model';
+import { Invitation } from '../models/invitation.model';
 import { IUser, User } from '../models/user.model';
 import { SocketBinding } from '../models/socket.model';
 import { CLIENT_URL } from '../utils/config';
@@ -22,6 +23,24 @@ router.post('/signup', async (req, res) => {
   const { lastName } = req.body;
   const { email } = req.body;
   const { password } = req.body;
+  const { invitation } = req.body;
+
+  // validation logic; TODO: use Joi to simplify this
+  if (!firstName || !lastName || !email || !password || !invitation) {
+    return errorHandler(res, 'Invalid request payload, missing body.');
+  }
+
+  if (firstName.length < 2 || lastName.length < 2) {
+    return errorHandler(res, 'Please enter a valid name.');
+  }
+
+  if (password.length < 6) {
+    return errorHandler(res, 'Password must have more than 6 characters.');
+  }
+
+  if (!(await Invitation.findOne({ code: invitation }))) {
+    return errorHandler(res, 'Invalid invitation code.');
+  }
 
   if (await User.findOne({ email })) {
     return errorHandler(res, 'User already exists.');
