@@ -27,10 +27,13 @@ router.post('/signup', async (req, res) => {
 
   // validation logic; TODO: use Joi to simplify this
   if (!firstName || !lastName || !email || !password || !invitation)
-    return errorHandler(res, 'Invalid request payload, missing body.');
+    return errorHandler(res, 'Oops... Make sure to fill out all the fields.');
 
   if (firstName.length < 2 || lastName.length < 2)
-    return errorHandler(res, 'Please enter a valid name.');
+    return errorHandler(
+      res,
+      'Hmm... Please make sure to enter your full name.'
+    );
 
   if (password.length < 6)
     return errorHandler(res, 'Password must have more than 6 characters.');
@@ -71,7 +74,7 @@ router.post('/login', async (req, res) => {
 
   const user = await User.findOne({ email });
   // user does not exist
-  if (!user) return errorHandler(res, 'User does not exist.');
+  if (!user) return errorHandler(res, 'User email or password is incorrect.');
 
   return compare(password, user.password, (err, result) => {
     if (err) return errorHandler(res, err.message);
