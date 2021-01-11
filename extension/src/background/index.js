@@ -17,6 +17,7 @@ import {
   setNotifyCount,
   setTokens,
 } from "../services/storageClient";
+import { AMPLITUDE_URL, sendAmplitudeData } from "../popup/util/amplitude";
 
 /****** background state, similar to redux ******/
 const socket = io.connect(API_ENDPOINT);
@@ -172,6 +173,7 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
         .catch((error) => response(error));
       break;
     case "popupInit":
+      sendAmplitudeData("POPUP_OPENED");
       // clear notification
       setNotifyCount(0, () => chrome.browserAction.setBadgeText({ text: "" }));
       getRefreshToken()
