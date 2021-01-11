@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Feedback from "./Feedback";
 import { ButtonSpinner } from "../components/LoadingSpinner";
+import { sendAmplitudeData } from "../util/amplitude";
 
 import "../styles/animation.css";
 import "../styles/color.css";
@@ -51,6 +52,7 @@ const Main = ({ pState, setPState }) => {
 
   const startSearch = () => {
     setIsLoading(true);
+    sendAmplitudeData("START_MATCHING");
     chrome.runtime.sendMessage({ type: "findMatch" }, (res) => {
       console.log("find match promsie end");
       console.log(res);
@@ -73,6 +75,7 @@ const Main = ({ pState, setPState }) => {
   };
 
   const completeMatch = () => {
+    sendAmplitudeData("COMPLETE_MATCH");
     chrome.runtime.sendMessage({ type: "completeMatch" }, (res) => {
       if (res.error) {
         // TODO: handle error
@@ -84,8 +87,7 @@ const Main = ({ pState, setPState }) => {
   };
 
   const joinCall = () => {
-    console.log("Joining call");
-    console.log(pState);
+    sendAmplitudeData("JOIN_CALL");
     openURL(pState.roomUrl);
   };
 
