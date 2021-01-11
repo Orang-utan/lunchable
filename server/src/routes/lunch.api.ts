@@ -1,7 +1,7 @@
 import express from 'express';
 import auth from '../middleware/auth';
 import { IRoom, Room } from '../models/room.model';
-import { User } from '../models/user.model';
+import { User, IUser } from '../models/user.model';
 import errorHandler from './error';
 import { CLIENT_URL, DAILY_API_KEY } from '../utils/config';
 import axios from 'axios';
@@ -9,21 +9,37 @@ import axios from 'axios';
 const router = express.Router();
 
 /***************************/
-// Utility functions below
+// Utility functions below //
 /***************************/
-function findAvailableRoom(
+
+/**
+ * @param rooms: list of all rooms
+ * @param targetMax: max number of participants user desires
+ * @param user: the user who is trying to find
+ */
+async function findAvailableRoom(
   rooms: IRoom[],
   targetMax: number,
-  uid: string
-): IRoom | null {
+  user: IUser
+): Promise<IRoom | null> {
   let resultRoom = null;
   for (const room of rooms) {
-    // TODO: check if any participants belong to same group
-    // check if room is not max & creator is not the same as current user
-    if (room.participants.length < targetMax && room.creatorId !== uid) {
-      resultRoom = room;
-      break;
-    }
+    // check if creator is the same or target has been recached
+    if (room.creatorId === user._id || room.participants.length >= targetMax)
+      continue;
+    // check if creator and user are in overlapping groups
+    const creator = await User.findById(room.creatorId);
+    if (!creator) continue;
+    const creatorGroup = creator.groupBelongedTo;
+    const userGroup = user.groupBelongedTo;
+    const intersection = creatorGroup.filter((cGroup: string) =>
+      userGroup.includes(cGroup)
+    );
+    if (intersection.length < 1) continue;
+
+    // all check has passed, assign room and break!
+    resultRoom = room;
+    break;
   }
 
   return resultRoom;
@@ -44,7 +60,7 @@ router.post('/find', auth, async (req, res) => {
 
   const maxParticipants = req.body.maxParticipants || 2; // if no arg, default to 2
   const rooms = await Room.find({});
-  const roomToJoin = findAvailableRoom(rooms, maxParticipants, userId);
+  const roomToJoin = await findAvailableRoom(rooms, maxParticipants, user);
 
   // compressed version to store in room
   const compressedUser = {
