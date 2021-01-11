@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 // sub nested document
 interface Participant {
   id: string;
+  email: string;
   firstName: string;
   lastName: string;
 }
@@ -25,6 +26,7 @@ const RoomSchema = new Schema({
         id: String,
         firstName: String,
         lastName: String,
+        email: String,
       },
     ],
     required: true,

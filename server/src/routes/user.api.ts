@@ -120,13 +120,14 @@ router.get('/me', auth, (req, res) => {
 
 /**
  * get and maintain past lunches
- * */
+ */
 router.get('/past-lunches', auth, async (req, res) => {
   const { userId } = req;
   const user = await User.findById(userId);
   if (!userId || !user) return errorHandler(res, 'User does not exist.');
 
   const foundRooms = await Room.find()
+    .sort({ timestamp: -1 })
     .where('_id')
     .in(user.pastLunches)
     .select('_id participants timestamp creatorId')

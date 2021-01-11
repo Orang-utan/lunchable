@@ -51,6 +51,7 @@ router.post('/find', auth, async (req, res) => {
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
+    email: user.email,
   };
 
   // if room available join, then join
@@ -158,6 +159,8 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
   let room;
   try {
     room = await Room.findById(roomId);
+    if (!room)
+      return errorHandler(res, 'Invalid Room ID. User status was reset.');
   } catch (err) {
     return errorHandler(res, 'Invalid Room ID. User status was reset.');
   }
@@ -177,8 +180,8 @@ router.post('/cancel/:roomId', auth, async (req, res) => {
   }
 
   // only delete room if user is creator
+  // delete room on daily and database
   if (room.creatorId === userId) {
-    // delete room on daily and database
     try {
       axios({
         url: `https://api.daily.co/v1/rooms/${roomId}`,

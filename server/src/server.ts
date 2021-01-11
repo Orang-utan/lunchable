@@ -14,6 +14,8 @@ app.use('/api', routes);
 // Serving Simple Static View
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (_, res) => {
-    res.send("👀 You've reached Lunchable's API server.");
+    res.send(
+      "👀 You've reached Lunchable's API server. Come help us build Lunchable (contact: dtian@seas.upenn.edu)."
+    );
   });
 }
