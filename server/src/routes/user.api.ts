@@ -3,7 +3,7 @@ import express from 'express';
 import auth from '../middleware/auth';
 import { Room } from '../models/room.model';
 import { Feedback } from '../models/feedback.model';
-import { Invitation } from '../models/invitation.model';
+import { Group } from '../models/group.model';
 import { IUser, User } from '../models/user.model';
 import { SocketBinding } from '../models/socket.model';
 import { CLIENT_URL } from '../utils/config';
@@ -26,28 +26,23 @@ router.post('/signup', async (req, res) => {
   const { invitation } = req.body;
 
   // validation logic; TODO: use Joi to simplify this
-  if (!firstName || !lastName || !email || !password || !invitation) {
+  if (!firstName || !lastName || !email || !password || !invitation)
     return errorHandler(res, 'Invalid request payload, missing body.');
-  }
 
-  if (firstName.length < 2 || lastName.length < 2) {
+  if (firstName.length < 2 || lastName.length < 2)
     return errorHandler(res, 'Please enter a valid name.');
-  }
 
-  if (password.length < 6) {
+  if (password.length < 6)
     return errorHandler(res, 'Password must have more than 6 characters.');
-  }
 
-  if (!(await Invitation.findOne({ code: invitation }))) {
-    return errorHandler(res, 'Invalid invitation code.');
-  }
-
-  if (await User.findOne({ email })) {
+  if (await User.findOne({ email }))
     return errorHandler(res, 'User already exists.');
-  }
+
+  const foundGroup = await Group.findOne({ groupCode: invitation });
+  if (!foundGroup) return errorHandler(res, 'Invalid invitation code.');
 
   // hash + salt password
-  return hash(password, saltRounds, (err: Error, hashedPassword) => {
+  return hash(password, saltRounds, async (err: Error, hashedPassword) => {
     if (err) {
       return errorHandler(res, err.message);
     }
@@ -57,12 +52,15 @@ router.post('/signup', async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
+      groupBelongedTo: [foundGroup._id],
     });
 
-    return newUser
-      .save()
-      .then(() => res.status(200).json({ success: true }))
-      .catch((e) => errorHandler(res, e.message));
+    await newUser.save();
+
+    foundGroup.members.push({ id: newUser._id, firstName, lastName, email });
+    await foundGroup.save();
+
+    return res.status(200).json({ success: true });
   });
 });
 

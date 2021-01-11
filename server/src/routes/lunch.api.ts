@@ -18,7 +18,7 @@ function findAvailableRoom(
 ): IRoom | null {
   let resultRoom = null;
   for (const room of rooms) {
-    // TODO: check if any participants belong to same group / are friends
+    // TODO: check if any participants belong to same group
     // check if room is not max & creator is not the same as current user
     if (room.participants.length < targetMax && room.creatorId !== uid) {
       resultRoom = room;
