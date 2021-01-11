@@ -4,11 +4,15 @@ import { app } from './server';
 import http from 'http';
 import socketio, { Socket } from 'socket.io';
 import { onConnection } from './sockets/index';
+import { initializeAdmin } from './loader';
 
 const main = async () => {
   // listen for termination
   process.on('SIGTERM', () => process.exit());
   await db.open();
+
+  // initialize data
+  initializeAdmin();
 
   // Creating the HTTP server
   const server = http.createServer(app);

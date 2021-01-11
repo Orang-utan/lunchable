@@ -22,7 +22,6 @@ const RoomPage = (props) => {
   // if not create a room, else return the room id
   return (
     <Container>
-      <h1 className="title is-h1">Meet your lunch date!</h1>
       <VideoCall url={`https://lunchable.daily.co/${roomID}`} />
     </Container>
   );

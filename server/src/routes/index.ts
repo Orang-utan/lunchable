@@ -1,10 +1,12 @@
 import express from 'express';
 
-import lunch from './lunch.api';
+import lunches from './lunch.api';
 import users from './user.api';
+import groups from './group.api';
 
 const router = express.Router();
 router.use('/users', users);
-router.use('/lunches', lunch);
+router.use('/lunches', lunches);
+router.use('/groups', groups);
 
 export default router;

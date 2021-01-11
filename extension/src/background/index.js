@@ -20,9 +20,8 @@ import {
 import { AMPLITUDE_URL, sendAmplitudeData } from "../popup/util/amplitude";
 
 /****** background state, similar to redux ******/
-let socket = io.connect(API_ENDPOINT);
+const socket = io.connect(API_ENDPOINT);
 let state = {
-  socketBinded: false,
   matchStatus: "rest",
   loggedIn: false,
   roomUrl: null,
@@ -61,12 +60,10 @@ socket.on("newNotification", (payload) => {
 
 /** socket emitters below */
 // socket binding on startup
-function bindSocketToUID() {
-  getAccessToken()
-    .then((token) =>
-      fetchMe(token).then((user) => socket.emit("bindUID", user))
-    )
-    .catch(() => console.error("Failed to bind user id with socket"));
+function bindSocketToUID(user) {
+  if (!user || !user._id) return;
+  console.log("Binding sockets: " + JSON.stringify(user));
+  socket.emit("bindUID", user);
 }
 
 // socket unbind on logout
@@ -112,12 +109,6 @@ function fetchStatus(roomId) {
       .catch((err) => console.error(err));
   });
 }
-
-/**
- * background script initialization below
- * note: this is different from popup initialization
- */
-bindSocketToUID();
 
 /****** background script message passing core logic ******/
 chrome.runtime.onMessage.addListener((msg, _, response) => {
@@ -177,32 +168,28 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
     case "submitFeedback":
       getAccessToken()
         .then((accessToken) => {
-          submitFeedback(accessToken, msg.payload).then((res) => {
-            response(res);
-          });
+          submitFeedback(accessToken, msg.payload).then((res) => response(res));
         })
         .catch((error) => response(error));
-
+      break;
     case "popupInit":
       sendAmplitudeData("POPUP_OPENED");
-      bindSocketToUID();
+      // clear notification
+      setNotifyCount(0, () => chrome.browserAction.setBadgeText({ text: "" }));
       getRefreshToken()
         .then(() => {
           getAccessToken().then((accessToken) => {
-            // initialize user state
             fetchMe(accessToken)
               .then((user) => {
-                // set state
+                // binding socket
+                bindSocketToUID(user);
+
+                // initialize user state
                 const { matchStatus, roomId, roomUrl } = user;
                 state.matchStatus = matchStatus;
                 state.roomId = roomId;
                 state.roomUrl = roomUrl;
                 state.loggedIn = true;
-
-                // clear notification
-                setNotifyCount(0, () =>
-                  chrome.browserAction.setBadgeText({ text: "" })
-                );
 
                 // dispatch worker if none & user is still searching
                 if (!statusInterval && matchStatus === "searching") {
@@ -260,10 +247,6 @@ chrome.runtime.onMessage.addListener((msg, _, response) => {
         .catch((error) => {
           response({ state, error });
         });
-      break;
-    case "checkLoggedIn":
-      console.log(state.loggedIn);
-      response(state);
       break;
     default:
       response({ success: false, error: "Unknown request" });

@@ -3,7 +3,7 @@ import express from 'express';
 import auth from '../middleware/auth';
 import { Room } from '../models/room.model';
 import { Feedback } from '../models/feedback.model';
-import { Invitation } from '../models/invitation.model';
+import { Group } from '../models/group.model';
 import { IUser, User } from '../models/user.model';
 import { SocketBinding } from '../models/socket.model';
 import { CLIENT_URL } from '../utils/config';
@@ -26,28 +26,26 @@ router.post('/signup', async (req, res) => {
   const { invitation } = req.body;
 
   // validation logic; TODO: use Joi to simplify this
-  if (!firstName || !lastName || !email || !password || !invitation) {
-    return errorHandler(res, 'Invalid request payload, missing body.');
-  }
+  if (!firstName || !lastName || !email || !password || !invitation)
+    return errorHandler(res, 'Oops... Make sure to fill out all the fields.');
 
-  if (firstName.length < 2 || lastName.length < 2) {
-    return errorHandler(res, 'Please enter a valid name.');
-  }
+  if (firstName.length < 2 || lastName.length < 2)
+    return errorHandler(
+      res,
+      'Hmm... Please make sure to enter your full name.'
+    );
 
-  if (password.length < 6) {
+  if (password.length < 6)
     return errorHandler(res, 'Password must have more than 6 characters.');
-  }
 
-  if (!(await Invitation.findOne({ code: invitation }))) {
-    return errorHandler(res, 'Invalid invitation code.');
-  }
-
-  if (await User.findOne({ email })) {
+  if (await User.findOne({ email }))
     return errorHandler(res, 'User already exists.');
-  }
+
+  const foundGroup = await Group.findOne({ groupCode: invitation });
+  if (!foundGroup) return errorHandler(res, 'Invalid invitation code.');
 
   // hash + salt password
-  return hash(password, saltRounds, (err: Error, hashedPassword) => {
+  return hash(password, saltRounds, async (err: Error, hashedPassword) => {
     if (err) {
       return errorHandler(res, err.message);
     }
@@ -57,12 +55,15 @@ router.post('/signup', async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
+      groupBelongedTo: [foundGroup._id],
     });
 
-    return newUser
-      .save()
-      .then(() => res.status(200).json({ success: true }))
-      .catch((e) => errorHandler(res, e.message));
+    await newUser.save();
+
+    foundGroup.members.push({ id: newUser._id, firstName, lastName, email });
+    await foundGroup.save();
+
+    return res.status(200).json({ success: true });
   });
 });
 
@@ -73,7 +74,7 @@ router.post('/login', async (req, res) => {
 
   const user = await User.findOne({ email });
   // user does not exist
-  if (!user) return errorHandler(res, 'User does not exist.');
+  if (!user) return errorHandler(res, 'User email or password is incorrect.');
 
   return compare(password, user.password, (err, result) => {
     if (err) return errorHandler(res, err.message);
@@ -129,7 +130,7 @@ router.get('/me', auth, (req, res) => {
     .select('firstName lastName email _id matchStatus roomId')
     .then((user: any) => {
       if (!user) return errorHandler(res, 'User does not exist.');
-      const roomUrl = `${CLIENT_URL}/rooms/${user.roomId}`;
+      const roomUrl = user.roomId ? `${CLIENT_URL}/rooms/${user.roomId}` : null;
       return res
         .status(200)
         .json({ success: true, data: { roomUrl, ...user._doc } });
