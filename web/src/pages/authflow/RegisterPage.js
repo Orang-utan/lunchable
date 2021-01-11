@@ -26,10 +26,12 @@ function RegisterPage() {
           ? error.response.data
           : { message: "An unknown error occurred.", code: null };
       let fields;
+      console.log(error.response.data);
+      console.log(code);
       if (code === "already-exists") {
         fields = ["email"];
       } else {
-        fields = ["firstName", "lastName", "email", "password"];
+        fields = ["firstName", "lastName", "email", "password", "invitation"];
       }
       for (const field of fields) {
         actions.setFieldError(field, message);
@@ -43,7 +45,13 @@ function RegisterPage() {
         <div className="header3">Create an account</div>
       </div>
       <Formik
-        initialValues={{ firstName: "", lastName: "", email: "", password: "" }}
+        initialValues={{
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          invitation: "",
+        }}
         onSubmit={handleSubmit}
       >
         {({ errors, isSubmitting }) => (
@@ -60,6 +68,13 @@ function RegisterPage() {
               name="password"
               type="password"
               label="Password"
+              errors={errors}
+            />
+            <FormField
+              name="invitation"
+              type="invitation"
+              label="Invitation Code"
+              placeholder="Contact us for invitation code!"
               errors={errors}
             />
             <button

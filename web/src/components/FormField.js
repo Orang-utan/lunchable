@@ -2,7 +2,7 @@ import { Field, ErrorMessage } from "formik";
 import clsx from "clsx";
 
 /** A `<Field />` from Formik with error messages & basic styling. */
-function FormField({ name, type, label, errors, width }) {
+function FormField({ name, type, label, errors, width, placeholder }) {
   return (
     <div className="field">
       <label style={{ marginBottom: "6px" }} className="body">
@@ -15,6 +15,7 @@ function FormField({ name, type, label, errors, width }) {
             name={name}
             type={type || "text"}
             className={clsx("input", errors[name] && "is-danger")}
+            placeholder={placeholder}
           />
         </div>
       </div>
