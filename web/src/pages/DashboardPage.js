@@ -69,7 +69,7 @@ const DashboardPage = (props) => {
           const groupName = group.groupName;
           const firstMember = group.members[0];
           return (
-            <div className="group-card">
+            <div className="group-card" key={group._id}>
               <div
                 style={{
                   display: "flex",
@@ -103,7 +103,7 @@ const DashboardPage = (props) => {
             lunch.participants[otherUserIdx].email
           );
           return (
-            <div className="history-card">
+            <div className="history-card" key={lunch._id}>
               <div
                 style={{
                   display: "flex",

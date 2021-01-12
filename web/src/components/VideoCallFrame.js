@@ -12,6 +12,7 @@ class VideoCallFrame extends React.Component {
       console.error("please set REACT_APP_DAILY_ROOM_URL env variable!");
       return;
     }
+
     this.daily = DailyIframe.wrap(this.iframeRef.current);
     this.daily.join({ url: this.props.url });
   }

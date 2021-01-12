@@ -137,8 +137,14 @@ router.get('/status/:roomId', auth, async (req, res) => {
   const roomId = req.params.roomId;
   if (!roomId) return errorHandler(res, 'No Room ID provided.');
 
-  const room = await Room.findById(roomId);
-  if (!room) return errorHandler(res, 'Invalid Room ID provided.');
+  let room;
+  try {
+    room = await Room.findById(roomId);
+    if (!room)
+      return errorHandler(res, 'Invalid Room ID. User status was reset.');
+  } catch (err) {
+    return errorHandler(res, 'Invalid Room ID. User status was reset.');
+  }
   const roomUrl = `${CLIENT_URL}/rooms/${room.id}`;
 
   // no one in room except
