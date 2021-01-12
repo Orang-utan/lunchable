@@ -39,10 +39,14 @@ const DashboardPage = (props) => {
 
   return isLoading === true ? (
     <div className="dash-container">
+      <br />
+      <br />
       <PageSpinner />
     </div>
   ) : (
     <div className="dash-container fade-in">
+      <br />
+      <br />
       <div className="info-card">
         <div className="header5 blue-text">How it works 🌟</div>
         <div className="body blue-text">

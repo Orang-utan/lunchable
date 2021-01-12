@@ -19,7 +19,7 @@ class VideoCallFrame extends React.Component {
   render() {
     return (
       <iframe
-        style={{ width: "90%", height: "90%" }}
+        style={{ position: "relative", width: "100%", height: "100%" }}
         className="Video-Frame"
         title="video call iframe"
         ref={this.iframeRef}

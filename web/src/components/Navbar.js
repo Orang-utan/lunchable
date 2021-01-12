@@ -68,8 +68,6 @@ function Navbar() {
         </div>
       </div>
       <hr />
-      <br />
-      <br />
     </div>
   );
 }
