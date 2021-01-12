@@ -138,6 +138,19 @@ router.get('/me', auth, (req, res) => {
     .catch((err: Error) => errorHandler(res, err.message));
 });
 
+/** get my groups */
+router.get('/groups', auth, async (req, res) => {
+  const { userId } = req;
+  const user = await User.findById(userId);
+  if (!userId || !user) return errorHandler(res, 'User does not exist.');
+
+  const groups = await Group.find({ _id: user.groupBelongedTo }).select(
+    'groupName members _id'
+  );
+
+  return res.status(200).json({ groups });
+});
+
 /**
  * get and maintain past lunches
  */

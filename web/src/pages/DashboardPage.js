@@ -19,6 +19,7 @@ const DashboardPage = (props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [pastLunches, setPastLunches] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
@@ -26,18 +27,15 @@ const DashboardPage = (props) => {
       setIsLoading(true);
       const pastLunches = await api.get("/api/users/past-lunches");
       const user = await api.get("/api/users/me");
+      const groups = await api.get("/api/users/groups");
       setUserInfo(user.data.data);
-      console.log(user.data.data.firstName);
       setPastLunches(pastLunches.data.lunches);
+      setGroups(groups.data.groups);
       setIsLoading(false);
     };
 
     onMount();
   }, []);
-
-  // const joinCall = () => {
-  //   window.open(userData.userInfo.roomUrl);
-  // };
 
   return isLoading === true ? (
     <div className="dash-container">
@@ -56,6 +54,37 @@ const DashboardPage = (props) => {
         <div className="body blue-text">
           3) Eat and hang out, just like the way we used to vibe
         </div>
+      </div>
+      <br />
+      <div className="title-container">
+        <div className="header3">My Groups</div>
+      </div>
+      <div className="history-container">
+        {groups.map((group) => {
+          const members = group.members;
+          const groupName = group.groupName;
+          const firstMember = group.members[0];
+          return (
+            <div className="group-card">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
+              >
+                <div>
+                  <strong className="body body-main">{groupName}</strong>
+                </div>
+                <div className="caption">
+                  {firstMember.firstName} {firstMember.lastName} +
+                  {members.length} more
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
       <br />
       <div className="title-container">
